@@ -14,4 +14,10 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>ASSETS</name>
+			<value>file:/C:/Users/Kevin/eclipse-workspace/Stack%20Overflow%20House/assets</value>
+		</variable>
+	</variableList>
 </projectDescription>

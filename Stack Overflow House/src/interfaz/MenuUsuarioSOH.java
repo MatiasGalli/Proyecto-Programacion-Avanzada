@@ -118,14 +118,14 @@ public class MenuUsuarioSOH extends JFrame {
 		btn_addToTheCart.setBounds(48, 350, 130, 25);
 		contentPane.add(btn_addToTheCart);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(MenuUsuarioSOH.class.getResource("/assets/SOH_logoMin.png")));
-		lblNewLabel.setBounds(10, 377, 36, 26);
-		contentPane.add(lblNewLabel);
+		JLabel lbl_logoSOH = new JLabel("New label");
+		lbl_logoSOH.setIcon(new ImageIcon(MenuUsuarioSOH.class.getResource("/assets/SOH_logoMin.png")));
+		lbl_logoSOH.setBounds(10, 377, 36, 26);
+		contentPane.add(lbl_logoSOH);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(632, 127, 18, 213);
-		contentPane.add(scrollPane);
+		JScrollPane scrollPane_products = new JScrollPane();
+		scrollPane_products.setBounds(632, 127, 18, 213);
+		contentPane.add(scrollPane_products);
 		
 	}
 }

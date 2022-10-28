@@ -1,18 +1,18 @@
 package interfaz;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.Color;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import java.awt.Toolkit;
@@ -57,15 +57,6 @@ public class LoginSOH extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btn_signIn = new JButton("Ingresar");
-		btn_signIn.setBackground(new Color(255, 255, 255));
-		btn_signIn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btn_signIn.setBounds(135, 210, 85, 21);
-		contentPane.add(btn_signIn);
-		
 		JLabel lbl_username = new JLabel("Usuario");
 		lbl_username.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lbl_username.setBounds(70, 40, 45, 13);
@@ -109,5 +100,36 @@ public class LoginSOH extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(70, 133, 200, 25);
 		contentPane.add(passwordField);
+		
+		JButton btn_signIn = new JButton("Ingresar");
+		btn_signIn.setBackground(new Color(255, 255, 255));
+		btn_signIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(textField_username.getText().equals("")) {
+					JFrame jFrame = new JFrame();
+					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un nombre de usuario");
+				}else if(passwordField.equals("")) {
+					JFrame jFrame = new JFrame();
+					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una contraseña");
+				/*
+				}else if("INGRESAR CONEXION CON BASE DE DATOS Y COMPARAR" == null){
+					JFrame jFrame = new JFrame();
+					JOptionPane.showMessageDialog(jFrame, "El usuario ingresado no existe");
+				}else if(!"DISTINTO A CONTRASEÑA DEL USUARIO DE LA BASE DE DATOS")) {
+					JFrame jFrame = new JFrame();
+					JOptionPane.showMessageDialog(jFrame, "La contraseña no coincide con el nombre de usuario");
+				*/
+				}else {
+					//CREAR UN USUARIO Y AÑADIRLO A LA BASE DE DATOS
+					String usuario = "NONAME";
+				
+					MenuUsuarioSOH v2 = new MenuUsuarioSOH();
+					v2.setVisible(true);
+					dispose();
+				}
+			}
+		});
+		btn_signIn.setBounds(135, 210, 85, 21);
+		contentPane.add(btn_signIn);
 	}
 }

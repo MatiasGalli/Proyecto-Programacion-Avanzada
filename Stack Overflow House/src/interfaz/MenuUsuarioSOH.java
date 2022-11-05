@@ -31,7 +31,7 @@ public class MenuUsuarioSOH extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuUsuarioSOH frame = new MenuUsuarioSOH();
+					MenuUsuarioSOH frame = new MenuUsuarioSOH("");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +43,7 @@ public class MenuUsuarioSOH extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuUsuarioSOH() {
+	public MenuUsuarioSOH(String user) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuUsuarioSOH.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Men\u00FA de usuario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,7 +54,7 @@ public class MenuUsuarioSOH extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lbl_welcomeMessage = new JLabel("\u00A1Nos alegra que est\u00E9s de vuelta, [USER]! Estos son los productos que se encuentran disponibles:");
+		JLabel lbl_welcomeMessage = new JLabel("\u00A1Nos alegra que est\u00E9s de vuelta, "+user+"! Estos son los productos que se encuentran disponibles:");
 		lbl_welcomeMessage.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lbl_welcomeMessage.setBounds(10, 25, 566, 13);
 		contentPane.add(lbl_welcomeMessage);

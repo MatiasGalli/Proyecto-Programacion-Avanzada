@@ -105,10 +105,12 @@ public class LoginSOH extends JFrame {
 		btn_signIn.setBackground(new Color(255, 255, 255));
 		btn_signIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(textField_username.getText().equals("")) {
+				boolean userEmpty = textField_username.getText().equals("");
+				boolean passEmpty = passwordField.getPassword().length==0;
+				if(userEmpty) {
 					JFrame jFrame = new JFrame();
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un nombre de usuario");
-				}else if(passwordField.equals("")) {
+				}if (passEmpty) {
 					JFrame jFrame = new JFrame();
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una contraseña");
 				/*
@@ -119,14 +121,14 @@ public class LoginSOH extends JFrame {
 					JFrame jFrame = new JFrame();
 					JOptionPane.showMessageDialog(jFrame, "La contraseña no coincide con el nombre de usuario");
 				*/
-				}else {
-					//CREAR UN USUARIO Y AÑADIRLO A LA BASE DE DATOS
-					String usuario = "NONAME";
-				
-					MenuUsuarioSOH v2 = new MenuUsuarioSOH();
+				}
+				if (!passEmpty && !userEmpty){
+					
+					MenuUsuarioSOH v2 = new MenuUsuarioSOH(textField_username.getText());
 					v2.setVisible(true);
 					dispose();
 				}
+				
 			}
 		});
 		btn_signIn.setBounds(135, 210, 85, 21);

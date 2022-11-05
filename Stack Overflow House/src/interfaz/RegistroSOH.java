@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
@@ -48,6 +49,7 @@ public class RegistroSOH extends JFrame {
 	 * Create the frame.
 	 */
 	public RegistroSOH() {
+		char[] DV = {'0','1','2','3','4','5','6','7','8','9','k',};
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroSOH.class.getResource("/assets/SOH_logo.png")));
 		setAlwaysOnTop(true);
 		setTitle("Registro");
@@ -65,7 +67,7 @@ public class RegistroSOH extends JFrame {
 		lbl_userName.setBounds(35, 41, 100, 15);
 		contentPane.add(lbl_userName);
 		
-		JLabel lbl_fullName = new JLabel("Nombre completo");
+		JLabel lbl_fullName = new JLabel("Nombre real completo");
 		lbl_fullName.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		lbl_fullName.setBounds(185, 41, 100, 15);
 		contentPane.add(lbl_fullName);
@@ -90,15 +92,7 @@ public class RegistroSOH extends JFrame {
 		lbl_confirmPassword.setBounds(185, 158, 113, 15);
 		contentPane.add(lbl_confirmPassword);
 		
-		JButton btn_register = new JButton("Reg\u00EDstrate");
-		btn_register.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btn_register.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btn_register.setBackground(new Color(255, 255, 255));
-		btn_register.setBounds(122, 218, 100, 21);
-		contentPane.add(btn_register);
+		
 		
 		textField_userName = new JTextField();
 		textField_userName.setBounds(35, 66, 120, 19);
@@ -141,5 +135,121 @@ public class RegistroSOH extends JFrame {
 		confirmPasswordField = new JPasswordField();
 		confirmPasswordField.setBounds(185, 183, 120, 19);
 		contentPane.add(confirmPasswordField);
+		
+		JButton btn_register = new JButton("Reg\u00EDstrate");
+		btn_register.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				boolean userNameEmpty = textField_userName.getText().equals("");
+				boolean realNameEmpty = textField_fullName.getText().equals("");
+				boolean rutEmpty = textField_rut.getText().equals("");
+				boolean emailEmpty = textField_email.getText().equals("");
+				boolean verNumEmpty = textField_verificationNumber.getText().equals("");
+				boolean passEmpty = passwordField.getPassword().length == 0;
+				boolean confirmPassEmpty = confirmPasswordField.getPassword().length == 0;
+				
+				if (!(userNameEmpty || realNameEmpty || rutEmpty || verNumEmpty || emailEmpty || passEmpty || confirmPassEmpty)) {
+					
+					int trueRut = 0;
+					try {
+						trueRut = Integer.parseInt(textField_rut.getText());
+					} catch (Exception p) {
+						rutEmpty = true;
+					}
+					
+					if (rutEmpty) {
+						JFrame jFrame = new JFrame();
+						JOptionPane.showMessageDialog(jFrame, "El espacio de RUT tiene caracteres inv\u00E1lidos. Coloque s\u00F3lo cifras num\u00E9ricas.");
+					} else {
+						if (textField_verificationNumber.getText().length()!=1) {
+							JFrame jFrame = new JFrame();
+							JOptionPane.showMessageDialog(jFrame, "Ha colocado m\u00E1s de un d\u00EDgito en la casilla de d\u00EDgito verificador.");
+						} else {
+							verNumEmpty = true;
+							for (int i=0;i<DV.length;i++) {
+								if (DV[i] == textField_verificationNumber.getText().charAt(0)) {
+									verNumEmpty = false;
+									break;
+								}
+							}
+							
+							if (verNumEmpty) {
+								JFrame jFrame = new JFrame();
+								JOptionPane.showMessageDialog(jFrame, "El d\u00EDgito verificador ingresado no es válido.");
+							} else {
+								String[] rutVector = textField_rut.getText().split("");
+								int sizeRut = rutVector.length;
+								
+								int aux1 = 0;
+								for (int k=0;k<sizeRut;k++) {
+									aux1 = aux1 + (Integer.parseInt(rutVector[sizeRut-1-k])*((k%6)+2));
+								}
+								int aux2 = aux1/11;
+								aux2 = aux2*11;
+								aux1 = aux1 - aux2;
+								if (aux1<0)aux1 = aux1*(-1);
+								aux1 = 11-aux1;
+									
+								if (textField_verificationNumber.getText().equalsIgnoreCase("k")) {
+									aux2 = 10;
+								} else if (textField_verificationNumber.getText().equalsIgnoreCase("0")) {
+									aux2 = 11;
+								} else {
+									aux2 = Integer.parseInt(textField_verificationNumber.getText());
+								}
+								
+								if (aux2 != aux1) {
+									JFrame jFrame = new JFrame();
+									JOptionPane.showMessageDialog(jFrame, "El RUT ingresado no es válido.");
+								} else {
+									
+									if (!(String.valueOf(confirmPasswordField.getPassword()).equals(String.valueOf(passwordField.getPassword())))) {
+										JFrame jFrame = new JFrame();
+										JOptionPane.showMessageDialog(jFrame, "Las contrase\u00F1as no coinciden.");
+									} else {
+										
+										String[] auxEmail = textField_email.getText().split("@");
+										
+										if (auxEmail.length != 2) {
+											JFrame jFrame = new JFrame();
+											JOptionPane.showMessageDialog(jFrame, "El texto en la casilla de E-mail no es un E-mail v\u00E1lido.");
+										} else if (!auxEmail[1].contains(".")){
+											JFrame jFrame = new JFrame();
+											JOptionPane.showMessageDialog(jFrame, "El Email no tiene una direcci\u00F3n v\u00E1lida.");
+										} else{
+											JFrame jFrame = new JFrame();
+											JOptionPane.showMessageDialog(jFrame, "¡Cuenta creada exitosamente!");
+											
+											LoginSOH v3 = new LoginSOH();
+											v3.setVisible(true);
+											dispose();
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				else {
+					JFrame jFrame = new JFrame();
+					String x = "";
+					if (userNameEmpty) x = x + "Nombre de usuario, ";
+					if (realNameEmpty) x = x + "Nombre real completo, ";
+					if (rutEmpty) x = x + "Rut, ";
+					if (verNumEmpty) x = x + "D\u00EDgito Verificador, ";
+					if (emailEmpty) x = x + "E-mail, ";
+					if (passEmpty) x = x + "Contrase\u00F1a, ";
+					if (confirmPassEmpty) x = x + "Confirmaci\u00F3n de contrase\u00F1a, ";
+					
+					x = x.substring(0, x.length()-2);
+					
+					JOptionPane.showMessageDialog(jFrame, "Los siguientes espacios no tienen datos: "+x+".");
+				}
+			}
+		});
+		btn_register.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btn_register.setBackground(new Color(255, 255, 255));
+		btn_register.setBounds(122, 218, 100, 21);
+		contentPane.add(btn_register);
 	}
 }

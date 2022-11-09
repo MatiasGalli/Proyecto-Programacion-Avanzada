@@ -1,6 +1,5 @@
 package interfaz;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -13,13 +12,16 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JScrollBar;
 import javax.swing.AbstractListModel;
 import javax.swing.border.LineBorder;
+
+import logica.SQL_Manager;
+
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
-public class MenuUsuarioSOH extends JFrame {
+@SuppressWarnings("serial")
+public class UserMenu extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField_search;
@@ -31,7 +33,7 @@ public class MenuUsuarioSOH extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuUsuarioSOH frame = new MenuUsuarioSOH("");
+					UserMenu frame = new UserMenu("", null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,8 +45,9 @@ public class MenuUsuarioSOH extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuUsuarioSOH(String user) {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuUsuarioSOH.class.getResource("/assets/SOH_logo.png")));
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public UserMenu(String user, SQL_Manager connection) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(UserMenu.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Men\u00FA de usuario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 450);
@@ -119,7 +122,7 @@ public class MenuUsuarioSOH extends JFrame {
 		contentPane.add(btn_addToTheCart);
 		
 		JLabel lbl_logoSOH = new JLabel("New label");
-		lbl_logoSOH.setIcon(new ImageIcon(MenuUsuarioSOH.class.getResource("/assets/SOH_logoMin.png")));
+		lbl_logoSOH.setIcon(new ImageIcon(UserMenu.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_logoSOH.setBounds(10, 377, 36, 26);
 		contentPane.add(lbl_logoSOH);
 		

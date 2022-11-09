@@ -6,9 +6,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import logica.SQL_Manager;
+
 import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,7 +24,8 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
 
-public class LoginSOH extends JFrame {
+@SuppressWarnings("serial")
+public class Login extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField_username;
@@ -32,7 +38,7 @@ public class LoginSOH extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginSOH frame = new LoginSOH();
+					Login frame = new Login(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,8 +50,8 @@ public class LoginSOH extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LoginSOH() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginSOH.class.getResource("/assets/SOH_logo.png")));
+	public Login(SQL_Manager connection) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/assets/SOH_logo.png")));
 		setResizable(false);
 		setTitle("Inicio de sesi\u00F3n");
 		setAlwaysOnTop(true);
@@ -73,15 +79,15 @@ public class LoginSOH extends JFrame {
 		contentPane.add(lbl_password);
 		
 		JLabel lbl_newUser = new JLabel("\u00BFNo tienes una cuenta?");
-		lbl_newUser.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		lbl_newUser.setBounds(100, 168, 120, 15);
+		lbl_newUser.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lbl_newUser.setBounds(80, 167, 129, 15);
 		contentPane.add(lbl_newUser);
 		
 		JButton btn_register = new JButton("Reg\u00EDstrate");
-		btn_register.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		btn_register.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btn_register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistroSOH v2 = new RegistroSOH();
+				Register v2 = new Register(connection);
 				v2.setVisible(true);
 				dispose();
 			}
@@ -89,11 +95,11 @@ public class LoginSOH extends JFrame {
 		btn_register.setForeground(new Color(0, 102, 255));
 		btn_register.setBorder(null);
 		btn_register.setContentAreaFilled(false);
-		btn_register.setBounds(173, 165, 85, 21);
+		btn_register.setBounds(185, 164, 85, 21);
 		contentPane.add(btn_register);
 		
 		JLabel lbl_SOHLogo = new JLabel("image");
-		lbl_SOHLogo.setIcon(new ImageIcon(LoginSOH.class.getResource("/assets/SOH_logoMin.png")));
+		lbl_SOHLogo.setIcon(new ImageIcon(Login.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_SOHLogo.setBounds(10, 227, 36, 26);
 		contentPane.add(lbl_SOHLogo);
 		
@@ -109,26 +115,41 @@ public class LoginSOH extends JFrame {
 				boolean passEmpty = passwordField.getPassword().length==0;
 				if(userEmpty) {
 					JFrame jFrame = new JFrame();
-					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un nombre de usuario");
-				}if (passEmpty) {
+					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un nombre de usuario.");
+				}else if (passEmpty) {
 					JFrame jFrame = new JFrame();
-					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una contraseña");
-				/*
-				}else if("INGRESAR CONEXION CON BASE DE DATOS Y COMPARAR" == null){
-					JFrame jFrame = new JFrame();
-					JOptionPane.showMessageDialog(jFrame, "El usuario ingresado no existe");
-				}else if(!"DISTINTO A CONTRASEÑA DEL USUARIO DE LA BASE DE DATOS")) {
-					JFrame jFrame = new JFrame();
-					JOptionPane.showMessageDialog(jFrame, "La contraseña no coincide con el nombre de usuario");
-				*/
+					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una clave.");
+				}else {
+					String sql = "select username,password from users where username = ?;";
+					PreparedStatement st;
+					ResultSet rs;
+					String username = null;
+					String userPassword = null;
+					/*try {
+						 FALTA SACAR EL USARIO Y CONTRASEÑA DE LA BASE DE DATOS
+						st = connection.getConnection().prepareStatement(sql);
+						st.setString(1, textField_username.getText());
+						username = st.getString("username");
+						userPassword = rs.getString("password");
+						
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					*/
+					String pass = String.valueOf(passwordField.getPassword());
+					if(username == null){
+						JFrame jFrame = new JFrame();
+						JOptionPane.showMessageDialog(jFrame, "El usuario ingresado no existe");
+					}else if(pass != userPassword) {
+						JFrame jFrame = new JFrame();
+						JOptionPane.showMessageDialog(jFrame, "La clave no coincide con el nombre de usuario");
+					}else {
+						String user = textField_username.getText();
+						UserMenu v2 = new UserMenu(user, connection);
+						v2.setVisible(true);
+						dispose();
+					}
 				}
-				if (!passEmpty && !userEmpty){
-					
-					MenuUsuarioSOH v2 = new MenuUsuarioSOH(textField_username.getText());
-					v2.setVisible(true);
-					dispose();
-				}
-				
 			}
 		});
 		btn_signIn.setBounds(135, 210, 85, 21);

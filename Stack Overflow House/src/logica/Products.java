@@ -33,7 +33,7 @@ public class Products {
 		}
 	}
 
-	public void insertProduct(SQL_Manager connection, String id, String name, String description, int price, int stock,
+	public void insertProduct(SQL_Manager connection, String id, String name, String description, float price, int stock,
 			String category_id) throws SQLException {
 		try {
 			String sql;
@@ -45,7 +45,7 @@ public class Products {
 			st.setString(1, id);
 			st.setString(2, name);
 			st.setString(3, description);
-			st.setInt(4, price);
+			st.setFloat(4, price);
 			st.setInt(4, stock);
 			st.setString(6, category_id);
 

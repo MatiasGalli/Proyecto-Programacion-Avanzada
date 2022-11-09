@@ -10,7 +10,7 @@ public class Users {
 		String sql;
 		Statement st;
 		ResultSet rs;
-		sql = "Select rut,fullname from usuario order by rut";
+		sql = "Select rut,fullname from users order by rut";
 
 		try {
 			st = connection.getConnection().createStatement();

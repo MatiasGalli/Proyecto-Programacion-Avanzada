@@ -34,6 +34,5 @@ public class SQL_Manager {
         if (connection == null) {
             System.out.println("Conexión terminada..");
         }
-    }
-		
+    }	
 }

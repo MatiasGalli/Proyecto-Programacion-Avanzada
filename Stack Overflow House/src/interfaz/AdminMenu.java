@@ -131,6 +131,17 @@ public class AdminMenu extends JFrame {
 		btn_categoriesCreate.setBounds(10, 45, 100, 21);
 		panel_categories.add(btn_categoriesCreate);
 		
+		JButton btn_back = new JButton("<-\r\n-");
+		btn_back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login v1 = new Login(connection);
+				v1.setVisible(true);
+				dispose();
+			}
+		});
+		btn_back.setBounds(0, 0, 55, 21);
+		contentPane.add(btn_back);
+		
 		JButton btn_categoriesEdit = new JButton("EDITAR");
 		btn_categoriesEdit.setBackground(new Color(255, 255, 255));
 		btn_categoriesEdit.setFont(new Font("Tahoma", Font.PLAIN, 14));

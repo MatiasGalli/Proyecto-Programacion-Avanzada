@@ -25,6 +25,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class UserMenu extends JFrame {
@@ -174,6 +176,17 @@ public class UserMenu extends JFrame {
 		JLabel lbl_category = new JLabel("Categor\u00EDa (ID)");
 		lbl_category.setBounds(545, 111, 88, 13);
 		contentPane.add(lbl_category);
+		
+		JButton btn_back = new JButton("<-\r\n-");
+		btn_back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login v1 = new Login(connection);
+				v1.setVisible(true);
+				dispose();
+			}
+		});
+		btn_back.setBounds(631, 392, 55, 21);
+		contentPane.add(btn_back);
 		
 	}
 	

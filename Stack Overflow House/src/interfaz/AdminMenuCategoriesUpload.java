@@ -74,6 +74,17 @@ public class AdminMenuCategoriesUpload extends JFrame {
 		lbl_SOHLogo.setIcon(new ImageIcon(Register.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_SOHLogo.setBounds(10, 82, 36, 26);
 		contentPane.add(lbl_SOHLogo);
+		
+		JButton btn_back = new JButton("<-\r\n-");
+		btn_back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenu v4 = new AdminMenu(connection);
+				v4.setVisible(true);
+				dispose();
+			}
+		});
+		btn_back.setBounds(0, 0, 55, 21);
+		contentPane.add(btn_back);
 
 		JButton btn_upload = new JButton("Crear");
 		btn_upload.addActionListener(new ActionListener() {

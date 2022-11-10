@@ -63,6 +63,17 @@ public class AdminMenuProductsUpload extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JButton btn_back = new JButton("<-\r\n-");
+		btn_back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenu v4 = new AdminMenu(connection);
+				v4.setVisible(true);
+				dispose();
+			}
+		});
+		btn_back.setBounds(271, 232, 55, 21);
+		contentPane.add(btn_back);
 
 		JLabel lbl_name = new JLabel("Nombre del producto");
 		lbl_name.setFont(new Font("Tahoma", Font.PLAIN, 8));

@@ -120,7 +120,18 @@ public class Register extends JFrame {
 		textField_verificationNumber.setColumns(10);
 		textField_verificationNumber.setBounds(130, 125, 25, 19);
 		contentPane.add(textField_verificationNumber);
-
+		
+		JButton btn_back = new JButton("<-\r\n-");
+		btn_back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login v1 = new Login(connection);
+				v1.setVisible(true);
+				dispose();
+			}
+		});
+		btn_back.setBounds(0, 0, 55, 21);
+		contentPane.add(btn_back);
+		
 		JLabel lbl_hyphen = new JLabel("-");
 		lbl_hyphen.setBounds(122, 125, 40, 23);
 		contentPane.add(lbl_hyphen);

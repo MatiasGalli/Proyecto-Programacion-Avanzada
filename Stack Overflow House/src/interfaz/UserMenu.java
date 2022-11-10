@@ -121,7 +121,7 @@ public class UserMenu extends JFrame {
 		btn_addToTheCart.setBounds(48, 350, 130, 25);
 		contentPane.add(btn_addToTheCart);
 		
-		JLabel lbl_logoSOH = new JLabel("New label");
+		JLabel lbl_logoSOH = new JLabel("Logo");
 		lbl_logoSOH.setIcon(new ImageIcon(UserMenu.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_logoSOH.setBounds(10, 377, 36, 26);
 		contentPane.add(lbl_logoSOH);

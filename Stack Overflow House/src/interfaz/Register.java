@@ -40,7 +40,7 @@ public class Register extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Register frame = new Register(null);
+					Register frame = new Register(false, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,7 +52,7 @@ public class Register extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Register(SQL_Manager connection) {
+	public Register(boolean admin, SQL_Manager connection) {
 		char[] DV = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'k', };
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/assets/SOH_logo.png")));
 		setAlwaysOnTop(true);
@@ -125,7 +125,7 @@ public class Register extends JFrame {
 		lbl_hyphen.setBounds(122, 125, 40, 23);
 		contentPane.add(lbl_hyphen);
 
-		JLabel lbl_SOHLogo = new JLabel("image");
+		JLabel lbl_SOHLogo = new JLabel("Logo");
 		lbl_SOHLogo.setIcon(new ImageIcon(Register.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_SOHLogo.setBounds(10, 227, 36, 26);
 		contentPane.add(lbl_SOHLogo);
@@ -242,9 +242,16 @@ public class Register extends JFrame {
 											} catch (SQLException e1) {
 												e1.printStackTrace();
 											}
-											UserMenu v3 = new UserMenu(user, connection);
-											v3.setVisible(true);
-											dispose();
+											if (!admin) {
+												UserMenu v3 = new UserMenu(user, connection);
+												v3.setVisible(true);
+												dispose();
+											}else {
+												AdminMenu v4 = new AdminMenu(connection);
+												v4.setVisible(true);
+												dispose();
+											}
+											
 										}
 									}
 								}

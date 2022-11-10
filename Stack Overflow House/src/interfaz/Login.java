@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,7 +29,7 @@ import javax.swing.JPasswordField;
 public class Login extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField_username;
+	private JTextField textField_rut;
 	private JPasswordField passwordField;
 
 	/**
@@ -63,18 +64,18 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lbl_username = new JLabel("Usuario");
-		lbl_username.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lbl_username.setBounds(70, 40, 45, 13);
-		contentPane.add(lbl_username);
+		JLabel lbl_rut = new JLabel("RUT (Con gui\u00F3n y numero verificador)");
+		lbl_rut.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lbl_rut.setBounds(70, 40, 200, 13);
+		contentPane.add(lbl_rut);
 		
-		textField_username = new JTextField();
-		textField_username.setBounds(70, 63, 200, 25);
-		contentPane.add(textField_username);
-		textField_username.setColumns(10);
+		textField_rut = new JTextField();
+		textField_rut.setBounds(70, 63, 200, 25);
+		contentPane.add(textField_rut);
+		textField_rut.setColumns(10);
 		
 		JLabel lbl_password = new JLabel("Contrase\u00F1a");
-		lbl_password.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lbl_password.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lbl_password.setBounds(70, 110, 71, 13);
 		contentPane.add(lbl_password);
 		
@@ -87,7 +88,8 @@ public class Login extends JFrame {
 		btn_register.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btn_register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Register v2 = new Register(connection);
+				boolean admin = false;
+				Register v2 = new Register(admin, connection);
 				v2.setVisible(true);
 				dispose();
 			}
@@ -98,7 +100,7 @@ public class Login extends JFrame {
 		btn_register.setBounds(185, 164, 85, 21);
 		contentPane.add(btn_register);
 		
-		JLabel lbl_SOHLogo = new JLabel("image");
+		JLabel lbl_SOHLogo = new JLabel("Logo");
 		lbl_SOHLogo.setIcon(new ImageIcon(Login.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_SOHLogo.setBounds(10, 227, 36, 26);
 		contentPane.add(lbl_SOHLogo);
@@ -111,43 +113,52 @@ public class Login extends JFrame {
 		btn_signIn.setBackground(new Color(255, 255, 255));
 		btn_signIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean userEmpty = textField_username.getText().equals("");
+				boolean userEmpty = textField_rut.getText().equals("");
 				boolean passEmpty = passwordField.getPassword().length==0;
 				if(userEmpty) {
 					JFrame jFrame = new JFrame();
-					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un nombre de usuario.");
+					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un rut.");
 				}else if (passEmpty) {
 					JFrame jFrame = new JFrame();
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una clave.");
 				}else {
-					String sql = "select username,password from users where username = ?;";
-					PreparedStatement st;
-					ResultSet rs;
-					String username = null;
-					String userPassword = null;
-					/*try {
-						 FALTA SACAR EL USARIO Y CONTRASEÑA DE LA BASE DE DATOS
+					String rut = null;
+					String password = null;
+					boolean admin = false;
+					String name = null;
+					try {
+						String sql = "select rut, password, admin, username from users where rut = ?";
+						PreparedStatement st;
 						st = connection.getConnection().prepareStatement(sql);
-						st.setString(1, textField_username.getText());
-						username = st.getString("username");
-						userPassword = rs.getString("password");
-						
+						st.setString(1, textField_rut.getText());
+						ResultSet rs = st.executeQuery();
+						rs.next();
+						rut = rs.getString(1);
+						password = rs.getString(2);
+						admin = rs.getBoolean(3);
+						name = rs.getString(4);
 					} catch (SQLException e1) {
-						e1.printStackTrace();
+						rut = null;
+						password = null;
 					}
-					*/
+					
 					String pass = String.valueOf(passwordField.getPassword());
-					if(username == null){
+					if(rut == null){
 						JFrame jFrame = new JFrame();
-						JOptionPane.showMessageDialog(jFrame, "El usuario ingresado no existe");
-					}else if(pass != userPassword) {
+						JOptionPane.showMessageDialog(jFrame, "El rut ingresado no existe");
+					}else if(!pass.equals(password)) {
 						JFrame jFrame = new JFrame();
-						JOptionPane.showMessageDialog(jFrame, "La clave no coincide con el nombre de usuario");
+						JOptionPane.showMessageDialog(jFrame, "La clave no coincide con el rut ingresado");
 					}else {
-						String user = textField_username.getText();
-						UserMenu v2 = new UserMenu(user, connection);
-						v2.setVisible(true);
-						dispose();
+						if (!admin) {
+							UserMenu v3 = new UserMenu(name, connection);
+							v3.setVisible(true);
+							dispose();
+						}else {
+							AdminMenu v4 = new AdminMenu(connection);
+							v4.setVisible(true);
+							dispose();
+						}
 					}
 				}
 			}

@@ -17,7 +17,9 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
@@ -151,14 +153,31 @@ public class AdminMenuProductsUpload extends JFrame {
 							JFrame jFrame = new JFrame();
 							JOptionPane.showMessageDialog(jFrame, "¡Producto creado exitosamente!");
 
-							String id = "-1"; // BUSCAR CORRELATIVO PARA IR INGRESANDO LAS ID DE CADA PRODUCTO
 							String name = textField_name.getText();
 							String description = textField_description.getText();
 							price = Float.parseFloat(textField_price.getText());
 							String category = textField_category.getText();
-							//BUSCAR EN BASE DE DATOS EL NOMBRE DE LA CATEGORIA PARA INGRESAR LA ID DE LA MISMA
+							String categoryID;
 							try {
-								insertProduct(connection, id, name, description, price, stock, category);
+								String sql = "select id from category where name = ?";
+								PreparedStatement st;
+								st = connection.getConnection().prepareStatement(sql);
+								st.setString(1, category);
+								ResultSet rs = st.executeQuery();
+								rs.next();
+								categoryID = rs.getString(1);
+							} catch (SQLException e1) {
+								categoryID = null;
+							}
+							
+							String id = "-1";
+							try {
+								id = countProducts(connection);
+							} catch (SQLException e2) {
+								e2.printStackTrace();
+							}
+							try {
+								insertProduct(connection, String.valueOf(Integer.parseInt(id) + 1), name, description, price, stock, categoryID);
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
@@ -212,7 +231,7 @@ public class AdminMenuProductsUpload extends JFrame {
 			st.setString(2, name);
 			st.setString(3, description);
 			st.setFloat(4, price);
-			st.setInt(4, stock);
+			st.setInt(5, stock);
 			st.setString(6, category_id);
 
 			st.executeUpdate();
@@ -220,5 +239,16 @@ public class AdminMenuProductsUpload extends JFrame {
 			System.out.println(ex.getMessage());
 		}
 
+	}
+	
+	public String countProducts(SQL_Manager connection) throws SQLException {
+		
+		String sql = "select id from product order by id desc limit 1";
+		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		rs.next();
+		String id = rs.getString("id");
+		return id;
 	}
 }

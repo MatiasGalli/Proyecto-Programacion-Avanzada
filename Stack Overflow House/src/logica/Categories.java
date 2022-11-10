@@ -26,6 +26,15 @@ public class Categories {
 		}
 	}
 	
+	public String countCategories(SQL_Manager connection) throws SQLException {
+		
+		String sql = "select id from category order by id desc limit 1";
+		
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		String id = rs.getString("id");
+		return id;
+	}
 	
 	public void insertCategories(SQL_Manager connection, String id, String name) throws SQLException {
 		

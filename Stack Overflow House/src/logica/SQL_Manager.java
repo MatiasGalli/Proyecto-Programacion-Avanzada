@@ -9,7 +9,7 @@ public class SQL_Manager {
 	private static Connection connection;
 	private static final String DRIVER = "org.postgresql.Driver";
 	private static final String USER = "postgres";
-	private static final String PASSWORD = "1234";
+	private static final String PASSWORD = "geminianoucn2021";
 	private static final String URL = "jdbc:postgresql://localhost:5432/StackOverflowHouse";
 
 	public SQL_Manager() throws ClassNotFoundException, SQLException, IOException {

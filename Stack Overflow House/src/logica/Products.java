@@ -55,5 +55,16 @@ public class Products {
 		}
 
 	}
+	
+	public String countProducts(SQL_Manager connection) throws SQLException {
+		
+		String sql = "select id from product order by id desc limit 1";
+		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		rs.next();
+		String id = rs.getString("id");
+		return id;
+	}
 
 }

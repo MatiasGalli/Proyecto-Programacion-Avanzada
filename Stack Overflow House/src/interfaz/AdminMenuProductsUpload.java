@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
 public class AdminMenuProductsUpload extends JFrame {
@@ -29,7 +31,6 @@ public class AdminMenuProductsUpload extends JFrame {
 	private JTextField textField_name;
 	private JTextField textField_price;
 	private JTextField textField_stock;
-	private JTextField textField_category;
 	private JTextField textField_description;
 
 	/**
@@ -51,6 +52,7 @@ public class AdminMenuProductsUpload extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public AdminMenuProductsUpload(SQL_Manager connection) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/assets/SOH_logo.png")));
 		setAlwaysOnTop(true);
@@ -63,7 +65,7 @@ public class AdminMenuProductsUpload extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JButton btn_back = new JButton("<-\r\n-");
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -92,7 +94,7 @@ public class AdminMenuProductsUpload extends JFrame {
 
 		JLabel lbl_category = new JLabel("Categor\u00EDa");
 		lbl_category.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		lbl_category.setBounds(185, 80, 100, 15);
+		lbl_category.setBounds(120, 80, 100, 15);
 		contentPane.add(lbl_category);
 
 		JLabel lbl_description = new JLabel("Descripci\u00F3n");
@@ -115,15 +117,28 @@ public class AdminMenuProductsUpload extends JFrame {
 		textField_stock.setBounds(35, 97, 50, 19);
 		contentPane.add(textField_stock);
 
-		textField_category = new JTextField();
-		textField_category.setColumns(10);
-		textField_category.setBounds(185, 97, 120, 19);
-		contentPane.add(textField_category);
-
 		JLabel lbl_SOHLogo = new JLabel("Logo");
 		lbl_SOHLogo.setIcon(new ImageIcon(Register.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_SOHLogo.setBounds(10, 227, 36, 26);
 		contentPane.add(lbl_SOHLogo);
+
+		JComboBox comboBox_category = new JComboBox();
+		int cant = 10;
+		try {
+			cant = Integer.parseInt(countCategories(connection));
+		} catch (NumberFormatException | SQLException e3) {
+			e3.printStackTrace();
+		}
+		String[] list = new String[cant + 1];
+		String[] values = null;
+		try {
+			values = getCategories(connection, list);
+		} catch (SQLException e3) {
+			e3.printStackTrace();
+		}
+		comboBox_category.setModel(new DefaultComboBoxModel(values));
+		comboBox_category.setBounds(120, 96, 185, 21);
+		contentPane.add(comboBox_category);
 
 		JButton btn_upload = new JButton("Crear");
 		btn_upload.addActionListener(new ActionListener() {
@@ -132,7 +147,7 @@ public class AdminMenuProductsUpload extends JFrame {
 				boolean nameEmpty = textField_name.getText().equals("");
 				boolean priceEmpty = textField_price.getText().equals("");
 				boolean stockEmpty = textField_stock.getText().equals("");
-				boolean categoryEmpty = textField_category.getText().equals("");
+				boolean categoryEmpty = ((String) comboBox_category.getSelectedItem()).equals("");
 				boolean descriptionEmpty = textField_description.getText().equals("");
 
 				if (!(nameEmpty || priceEmpty || stockEmpty || categoryEmpty || descriptionEmpty)) {
@@ -167,7 +182,7 @@ public class AdminMenuProductsUpload extends JFrame {
 							String name = textField_name.getText();
 							String description = textField_description.getText();
 							price = Float.parseFloat(textField_price.getText());
-							String category = textField_category.getText();
+							String category = (String) comboBox_category.getSelectedItem();
 							String categoryID;
 							try {
 								String sql = "select id from category where name = ?";
@@ -180,7 +195,7 @@ public class AdminMenuProductsUpload extends JFrame {
 							} catch (SQLException e1) {
 								categoryID = null;
 							}
-							
+
 							String id = "-1";
 							try {
 								id = countProducts(connection);
@@ -188,7 +203,8 @@ public class AdminMenuProductsUpload extends JFrame {
 								e2.printStackTrace();
 							}
 							try {
-								insertProduct(connection, String.valueOf(Integer.parseInt(id) + 1), name, description, price, stock, categoryID);
+								insertProduct(connection, String.valueOf(Integer.parseInt(id) + 1), name, description,
+										price, stock, categoryID);
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
@@ -251,15 +267,42 @@ public class AdminMenuProductsUpload extends JFrame {
 		}
 
 	}
-	
+
 	public String countProducts(SQL_Manager connection) throws SQLException {
-		
+
 		String sql = "select id from product order by id desc limit 1";
-		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		rs.next();
 		String id = rs.getString("id");
 		return id;
+	}
+
+	public String countCategories(SQL_Manager connection) throws SQLException {
+
+		String sql = "select id from category order by id desc limit 1";
+
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		rs.next();
+		String id = rs.getString("id");
+		return id;
+	}
+
+	public String[] getCategories(SQL_Manager connection, String[] list) throws SQLException {
+
+		String[] values = list;
+		String sql = "select name from category";
+		//VERIFICAR EL CASO DE QUE NO EXISTAN CATEGORIAS
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		int cant = 0;
+		while (rs.next()) {
+			values[cant] = rs.getString("name");
+			cant++;
+		}
+		return values;
+
 	}
 }

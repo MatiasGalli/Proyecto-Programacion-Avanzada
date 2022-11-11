@@ -124,9 +124,17 @@ public class Register extends JFrame {
 		JButton btn_back = new JButton("<-\r\n-");
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login v1 = new Login(connection);
-				v1.setVisible(true);
-				dispose();
+				if (!admin) {
+					Login v1 = new Login(connection);
+					v1.setLocationRelativeTo(null);
+					v1.setVisible(true);
+					dispose();
+				}else {
+					AdminMenu v4 = new AdminMenu(connection);
+					v4.setLocationRelativeTo(null);
+					v4.setVisible(true);
+					dispose();
+				}
 			}
 		});
 		btn_back.setBounds(0, 0, 55, 21);
@@ -174,11 +182,13 @@ public class Register extends JFrame {
 
 					if (rutEmpty) {
 						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame,
 								"El espacio de RUT tiene caracteres inv\u00E1lidos. Coloque s\u00F3lo cifras num\u00E9ricas.");
 					} else {
 						if (textField_verificationNumber.getText().length() != 1) {
 							JFrame jFrame = new JFrame();
+							jFrame.setAlwaysOnTop(true);
 							JOptionPane.showMessageDialog(jFrame,
 									"Ha colocado m\u00E1s de un d\u00EDgito en la casilla de d\u00EDgito verificador.");
 						} else {
@@ -192,6 +202,7 @@ public class Register extends JFrame {
 
 							if (verNumEmpty) {
 								JFrame jFrame = new JFrame();
+								jFrame.setAlwaysOnTop(true);
 								JOptionPane.showMessageDialog(jFrame,
 										"El d\u00EDgito verificador ingresado no es válido.");
 							} else {
@@ -219,12 +230,14 @@ public class Register extends JFrame {
 
 								if (aux2 != aux1) {
 									JFrame jFrame = new JFrame();
+									jFrame.setAlwaysOnTop(true);
 									JOptionPane.showMessageDialog(jFrame, "El RUT ingresado no es válido.");
 								} else {
 
 									if (!(String.valueOf(confirmPasswordField.getPassword())
 											.equals(String.valueOf(passwordField.getPassword())))) {
 										JFrame jFrame = new JFrame();
+										jFrame.setAlwaysOnTop(true);
 										JOptionPane.showMessageDialog(jFrame, "Las contrase\u00F1as no coinciden.");
 									} else {
 
@@ -232,14 +245,17 @@ public class Register extends JFrame {
 
 										if (auxEmail.length != 2) {
 											JFrame jFrame = new JFrame();
+											jFrame.setAlwaysOnTop(true);
 											JOptionPane.showMessageDialog(jFrame,
 													"El texto en la casilla de E-mail no es un E-mail v\u00E1lido.");
 										} else if (!auxEmail[1].contains(".")) {
 											JFrame jFrame = new JFrame();
+											jFrame.setAlwaysOnTop(true);
 											JOptionPane.showMessageDialog(jFrame,
 													"El Email no tiene una direcci\u00F3n v\u00E1lida.");
 										} else {
 											JFrame jFrame = new JFrame();
+											jFrame.setAlwaysOnTop(true);
 											JOptionPane.showMessageDialog(jFrame, "¡Cuenta creada exitosamente!");
 											String user = textField_userName.getText();
 											String fullname = textField_fullName.getText();
@@ -255,10 +271,12 @@ public class Register extends JFrame {
 											}
 											if (!admin) {
 												UserMenu v3 = new UserMenu(user, connection);
+												v3.setLocationRelativeTo(null);
 												v3.setVisible(true);
 												dispose();
 											}else {
 												AdminMenu v4 = new AdminMenu(connection);
+												v4.setLocationRelativeTo(null);
 												v4.setVisible(true);
 												dispose();
 											}
@@ -289,6 +307,7 @@ public class Register extends JFrame {
 
 					x = x.substring(0, x.length() - 2);
 
+					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Los siguientes espacios no tienen datos: " + x + ".");
 				}
 			}

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -78,7 +79,7 @@ public class UserMenu extends JFrame {
 		textField_search.setColumns(10);
 		
 		JLabel lbl_typeToSearch = new JLabel("Ingrese un t\u00E9rmino");
-		lbl_typeToSearch.setBounds(274, 88, 145, 13);
+		lbl_typeToSearch.setBounds(278, 88, 145, 13);
 		contentPane.add(lbl_typeToSearch);
 		
 		JButton btn_search = new JButton("Buscar");
@@ -124,6 +125,7 @@ public class UserMenu extends JFrame {
 		contentPane.add(scrollPane_products);
 		
 		table_products = new JTable();
+		table_products.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		table_products.setShowGrid(false);
 		table_products.setShowVerticalLines(false);
 		int cant = 10;
@@ -141,7 +143,7 @@ public class UserMenu extends JFrame {
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false
+				false, false, false, false, true
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -149,32 +151,32 @@ public class UserMenu extends JFrame {
 		});
 		table_products.getColumnModel().getColumn(0).setResizable(false);
 		table_products.getColumnModel().getColumn(0).setPreferredWidth(25);
-		table_products.getColumnModel().getColumn(1).setPreferredWidth(169);
+		table_products.getColumnModel().getColumn(1).setPreferredWidth(190);
 		table_products.getColumnModel().getColumn(2).setResizable(false);
-		table_products.getColumnModel().getColumn(3).setResizable(false);
-		table_products.getColumnModel().getColumn(4).setResizable(false);
+		table_products.getColumnModel().getColumn(3).setPreferredWidth(45);
+		table_products.getColumnModel().getColumn(4).setPreferredWidth(175);
 		table_products.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		table_products.setBounds(230, 127, 403, 213);
 		contentPane.add(table_products);
 		
 		JLabel lbl_ID = new JLabel("ID");
-		lbl_ID.setBounds(240, 111, 18, 13);
+		lbl_ID.setBounds(237, 111, 18, 13);
 		contentPane.add(lbl_ID);
 		
 		JLabel lbl_name = new JLabel("Nombre");
-		lbl_name.setBounds(307, 111, 46, 13);
+		lbl_name.setBounds(255, 111, 46, 13);
 		contentPane.add(lbl_name);
 		
 		JLabel lbl_price = new JLabel("Precio");
-		lbl_price.setBounds(413, 111, 46, 13);
+		lbl_price.setBounds(398, 111, 46, 13);
 		contentPane.add(lbl_price);
 		
 		JLabel lbl_stock = new JLabel("Stock");
-		lbl_stock.setBounds(490, 111, 62, 13);
+		lbl_stock.setBounds(451, 111, 62, 13);
 		contentPane.add(lbl_stock);
 		
-		JLabel lbl_category = new JLabel("Categor\u00EDa (ID)");
-		lbl_category.setBounds(545, 111, 88, 13);
+		JLabel lbl_category = new JLabel("Categor\u00EDa");
+		lbl_category.setBounds(497, 111, 88, 13);
 		contentPane.add(lbl_category);
 		
 		JButton btn_back = new JButton("<-\r\n-");
@@ -194,7 +196,7 @@ public class UserMenu extends JFrame {
 		
 		
 		Object[][] list = values;
-		String sql;
+		String sql, category;
 		Statement st;
 		ResultSet rs;
 		sql = "Select * from product";
@@ -208,7 +210,8 @@ public class UserMenu extends JFrame {
 				list[cant][1] = rs.getString("name");
 				list[cant][2] = "$" + rs.getString("price");
 				list[cant][3] = rs.getString("stock");
-				list[cant][4] = rs.getString("category_id");
+				category = getCategories(connection,rs.getString("category_id"));
+				list[cant][4] = category;
 				cant++;
 			}
 
@@ -227,5 +230,17 @@ public class UserMenu extends JFrame {
 		rs.next();
 		String id = rs.getString("id");
 		return id;
+	}
+	
+	public String getCategories(SQL_Manager connection, String id) throws SQLException {
+
+		String sql = "select name from category where id = ?";
+		PreparedStatement st;
+		st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, id);
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		String name = rs.getString(1);
+		return name;
 	}
 }

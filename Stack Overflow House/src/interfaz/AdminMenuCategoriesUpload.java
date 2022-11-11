@@ -79,6 +79,7 @@ public class AdminMenuCategoriesUpload extends JFrame {
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AdminMenu v4 = new AdminMenu(connection);
+				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();
 			}

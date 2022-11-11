@@ -80,6 +80,7 @@ public class AdminMenu extends JFrame {
 		btn_productsUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AdminMenuProductsUpload v5 = new AdminMenuProductsUpload(connection);
+				v5.setLocationRelativeTo(null);
 				v5.setVisible(true);
 				dispose();
 			}
@@ -122,6 +123,7 @@ public class AdminMenu extends JFrame {
 		btn_categoriesCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AdminMenuCategoriesUpload v6 = new AdminMenuCategoriesUpload(connection);
+				v6.setLocationRelativeTo(null);
 				v6.setVisible(true);
 				dispose();
 			}
@@ -135,6 +137,7 @@ public class AdminMenu extends JFrame {
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Login v1 = new Login(connection);
+				v1.setLocationRelativeTo(null);
 				v1.setVisible(true);
 				dispose();
 			}
@@ -172,6 +175,7 @@ public class AdminMenu extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				boolean admin = true;
 				Register v2 = new Register(admin, connection);
+				v2.setLocationRelativeTo(null);
 				v2.setVisible(true);
 				dispose();
 			}
@@ -188,6 +192,14 @@ public class AdminMenu extends JFrame {
 		panel_users.add(btn_usersEditInfo);
 		
 		JButton btn_usersBan = new JButton("BLOQUEAR");
+		btn_usersBan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenuUsersBan v7 = new AdminMenuUsersBan(connection);
+				v7.setLocationRelativeTo(null);
+				v7.setVisible(true);
+				dispose();
+			}
+		});
 		btn_usersBan.setBackground(new Color(255, 255, 255));
 		btn_usersBan.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btn_usersBan.setBounds(10, 164, 100, 21);

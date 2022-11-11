@@ -89,6 +89,7 @@ public class Login extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				boolean admin = false;
 				Register v2 = new Register(admin, connection);
+				v2.setLocationRelativeTo(null);
 				v2.setVisible(true);
 				dispose();
 			}
@@ -116,9 +117,11 @@ public class Login extends JFrame {
 				boolean passEmpty = passwordField.getPassword().length==0;
 				if(userEmpty) {
 					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un rut.");
 				}else if (passEmpty) {
 					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una clave.");
 				}else {
 					String rut = null;
@@ -144,17 +147,21 @@ public class Login extends JFrame {
 					String pass = String.valueOf(passwordField.getPassword());
 					if(rut == null){
 						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "El rut ingresado no existe");
 					}else if(!pass.equals(password)) {
 						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "La clave no coincide con el rut ingresado");
 					}else {
 						if (!admin) {
 							UserMenu v3 = new UserMenu(name, connection);
+							v3.setLocationRelativeTo(null);
 							v3.setVisible(true);
 							dispose();
 						}else {
 							AdminMenu v4 = new AdminMenu(connection);
+							v4.setLocationRelativeTo(null);
 							v4.setVisible(true);
 							dispose();
 						}

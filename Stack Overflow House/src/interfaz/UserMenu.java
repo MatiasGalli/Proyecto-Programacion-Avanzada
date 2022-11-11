@@ -183,11 +183,12 @@ public class UserMenu extends JFrame {
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Login v1 = new Login(connection);
+				v1.setLocationRelativeTo(null);
 				v1.setVisible(true);
 				dispose();
 			}
 		});
-		btn_back.setBounds(631, 392, 55, 21);
+		btn_back.setBounds(0, 0, 55, 21);
 		contentPane.add(btn_back);
 		
 	}

@@ -70,11 +70,12 @@ public class AdminMenuProductsUpload extends JFrame {
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AdminMenu v4 = new AdminMenu(connection);
+				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();
 			}
 		});
-		btn_back.setBounds(271, 232, 55, 21);
+		btn_back.setBounds(0, 0, 55, 21);
 		contentPane.add(btn_back);
 
 		JLabel lbl_name = new JLabel("Nombre del producto");
@@ -294,7 +295,7 @@ public class AdminMenuProductsUpload extends JFrame {
 
 		String[] values = list;
 		String sql = "select name from category";
-		//VERIFICAR EL CASO DE QUE NO EXISTAN CATEGORIAS
+		// VERIFICAR EL CASO DE QUE NO EXISTAN CATEGORIAS
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		int cant = 0;
@@ -303,6 +304,5 @@ public class AdminMenuProductsUpload extends JFrame {
 			cant++;
 		}
 		return values;
-
 	}
 }

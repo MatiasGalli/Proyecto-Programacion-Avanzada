@@ -228,9 +228,11 @@ public class UserMenu extends JFrame {
 		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
-		rs.next();
-		String id = rs.getString("id");
-		return id;
+		if(rs.next()) {
+			String id = rs.getString("id");
+			return id;
+		}
+		return "-1";
 	}
 	
 	public String getCategories(SQL_Manager connection, String id) throws SQLException {

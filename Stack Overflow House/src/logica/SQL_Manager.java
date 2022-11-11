@@ -8,9 +8,9 @@ import java.sql.SQLException;
 public class SQL_Manager {
 	private static Connection connection;
 	private static final String DRIVER = "org.postgresql.Driver";
-	private static final String USER = "postgres";
-	private static final String PASSWORD = "geminianoucn2021";
-	private static final String URL = "jdbc:postgresql://localhost:5432/StackOverflowHouse";
+	private static final String USER = "ikeusjsy";
+	private static final String PASSWORD = "1UHViXHTQh0M7Ly4tyM4kp8k6LwRVjUy";
+	private static final String URL = "jdbc:postgresql://babar.db.elephantsql.com:5432/ikeusjsy";
 
 	public SQL_Manager() throws ClassNotFoundException, SQLException, IOException {
 		connection = null;

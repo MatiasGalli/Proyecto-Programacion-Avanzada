@@ -245,7 +245,8 @@ public Object[][] getUsers(SQL_Manager connection, Object[][] values) {
 		ResultSet rs = st.executeQuery();
 		if(rs.next()) {
 			cant = rs.getInt(1);
+			return cant;
 		}
-		return cant;
+		return 0;
 	}
 }

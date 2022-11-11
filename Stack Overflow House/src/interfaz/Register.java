@@ -302,7 +302,7 @@ public class Register extends JFrame {
 	public void insertUser(SQL_Manager connection, String rut, String fullname, String username, String address,
 			String email, String password) throws SQLException {
 		try {
-			String sql = "insert into users(rut,fullname,username,address,email,admin,password) values (?,?,?,?,?,?,?)";
+			String sql = "insert into users(rut,fullname,username,address,email,admin,password,banned) values (?,?,?,?,?,?,?,?)";
 			PreparedStatement st = connection.getConnection().prepareStatement(sql);
 			st.setString(1, rut);
 			st.setString(2, fullname);
@@ -311,6 +311,7 @@ public class Register extends JFrame {
 			st.setString(5, email);
 			st.setBoolean(6, false);
 			st.setString(7, password);
+			st.setBoolean(8, false);
 			st.executeUpdate();
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());

@@ -52,4 +52,17 @@ public class Users {
 		st.setString(1, rut);
 		st.executeUpdate();
 	}
+	
+	public void banUser(SQL_Manager connection, String rut) {
+		String sql = "update users set banned = ? where rut = ?";
+		PreparedStatement st;
+		try {
+			st = connection.getConnection().prepareStatement(sql);
+			st.setBoolean(1, true);
+			st.setString(2, rut);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

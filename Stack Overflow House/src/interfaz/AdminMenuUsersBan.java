@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -27,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Panel;
 
 @SuppressWarnings("serial")
 public class AdminMenuUsersBan extends JFrame {
@@ -111,7 +113,8 @@ public class AdminMenuUsersBan extends JFrame {
 
 		JComboBox comboBox_categorySearch = new JComboBox();
 		comboBox_categorySearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		comboBox_categorySearch.setModel(new DefaultComboBoxModel(new String[] {"RUT", "Nombre de usuario", "Nombre Completo", "Correo Electr\u00F3nico"}));
+		comboBox_categorySearch.setModel(new DefaultComboBoxModel(
+				new String[] { "RUT", "Nombre de usuario", "Nombre Completo", "Correo Electr\u00F3nico" }));
 		comboBox_categorySearch.setBounds(730, 50, 230, 26);
 		contentPane.add(comboBox_categorySearch);
 
@@ -125,11 +128,11 @@ public class AdminMenuUsersBan extends JFrame {
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 		}
-		Object[][] table = new Object[cant][4];
+		Object[][] table = new Object[cant][5];
 		Object[][] values = getUsers(connection, table);
-		table_userInfo.setModel(new DefaultTableModel(values,
-				new String[] { "RUT", "Nombre de usuario", "Nombre Completo", "Correo Electr\u00F3nico" }) {
-			boolean[] columnEditables = new boolean[] { false, false, false, false };
+		table_userInfo.setModel(new DefaultTableModel(values, new String[] { "RUT", "Nombre de usuario",
+				"Nombre Completo", "Correo Electr\u00F3nico", "Bloqueado" }) {
+			boolean[] columnEditables = new boolean[] { false, false, false, false, false };
 
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -142,6 +145,7 @@ public class AdminMenuUsersBan extends JFrame {
 		table_userInfo.getColumnModel().getColumn(2).setPreferredWidth(213);
 		table_userInfo.getColumnModel().getColumn(3).setResizable(false);
 		table_userInfo.getColumnModel().getColumn(3).setPreferredWidth(172);
+		table_userInfo.getColumnModel().getColumn(4).setPreferredWidth(15);
 		table_userInfo.setRowHeight(26);
 		table_userInfo.setBounds(60, 110, 900, 310);
 		JScrollPane scrollPane_userInfo = new JScrollPane(table_userInfo);
@@ -155,6 +159,16 @@ public class AdminMenuUsersBan extends JFrame {
 		contentPane.add(lbl_SOHlogo);
 
 		btn_ban = new JButton("BLOQUEAR");
+		btn_ban.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String rut = (String) values[table_userInfo.getSelectedRow()][0];
+				System.out.println(rut);
+				banUser(connection,rut);
+				JFrame jFrame = new JFrame();
+				jFrame.setAlwaysOnTop(true);
+				JOptionPane.showMessageDialog(jFrame,"El usuario ha sido bloqueado exitosamente.");
+			}
+		});
 		btn_ban.setBackground(Color.WHITE);
 		btn_ban.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_ban.setBounds(140, 480, 180, 26);
@@ -173,7 +187,8 @@ public class AdminMenuUsersBan extends JFrame {
 
 		comboBox_categoryOrder = new JComboBox();
 		comboBox_categoryOrder.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		comboBox_categoryOrder.setModel(new DefaultComboBoxModel(new String[] {"RUT", "Nombre de usuario", "Nombre Completo", "Correo Electr\u00F3nico"}));
+		comboBox_categoryOrder.setModel(new DefaultComboBoxModel(new String[] { "RUT", "Nombre de usuario",
+				"Nombre Completo", "Correo Electr\u00F3nico", "Bloqueado" }));
 		comboBox_categoryOrder.setBounds(600, 481, 230, 26);
 		contentPane.add(comboBox_categoryOrder);
 
@@ -196,21 +211,20 @@ public class AdminMenuUsersBan extends JFrame {
 		btn_search = new JButton("BUSCAR");
 		btn_search.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_search.setBackground(Color.WHITE);
-		btn_search.setBounds(405, 84, 140, 26);
+		btn_search.setBounds(421, 84, 140, 26);
 		contentPane.add(btn_search);
-		
+
 		btn_search_1 = new JButton("ORDENAR");
 		btn_search_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_search_1.setBackground(Color.WHITE);
 		btn_search_1.setBounds(580, 550, 132, 26);
 		contentPane.add(btn_search_1);
 	}
-	
-public Object[][] getUsers(SQL_Manager connection, Object[][] values) {
-		
-		
+
+	public Object[][] getUsers(SQL_Manager connection, Object[][] values) {
+
 		Object[][] list = values;
-		String sql;
+		String sql, ban;
 		Statement st;
 		ResultSet rs;
 		sql = "Select * from users";
@@ -219,14 +233,19 @@ public Object[][] getUsers(SQL_Manager connection, Object[][] values) {
 			st = connection.getConnection().createStatement();
 			rs = st.executeQuery(sql);
 			int cant = 0;
-			while(rs.next()) {
+			while (rs.next()) {
 				if (!rs.getBoolean("admin")) {
-					list[cant][0] = "   " + rs.getString("rut");
+					list[cant][0] = rs.getString("rut");
 					list[cant][1] = rs.getString("username");
 					list[cant][2] = rs.getString("fullname");
 					list[cant][3] = rs.getString("email");
+					if (rs.getBoolean("banned"))
+						ban = "Si";
+					else
+						ban = "No";
+					list[cant][4] = ban;
 					cant++;
-				} 
+				}
 			}
 
 		} catch (SQLException ex) {
@@ -234,19 +253,32 @@ public Object[][] getUsers(SQL_Manager connection, Object[][] values) {
 		}
 		return list;
 	}
-	
+
 	public int countUsers(SQL_Manager connection) throws SQLException {
-		
+
 		int cant = 0;
 		String sql = "select count(*) from users where admin = ?";
 		PreparedStatement st;
 		st = connection.getConnection().prepareStatement(sql);
 		st.setBoolean(1, false);
 		ResultSet rs = st.executeQuery();
-		if(rs.next()) {
+		if (rs.next()) {
 			cant = rs.getInt(1);
 			return cant;
 		}
 		return 0;
+	}
+
+	public void banUser(SQL_Manager connection, String rut) {
+		String sql = "update users set banned = ? where rut = ?";
+		PreparedStatement st;
+		try {
+			st = connection.getConnection().prepareStatement(sql);
+			st.setBoolean(1, true);
+			st.setString(2, rut);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

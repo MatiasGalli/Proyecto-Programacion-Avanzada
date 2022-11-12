@@ -141,8 +141,10 @@ public class AdminMenuCategoriesUpload extends JFrame {
 		
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
-		rs.next();
-		String id = rs.getString("id");
-		return id;
+		if(rs.next()) {
+			String id = rs.getString("id");
+			return id;
+		}
+		return "-1";
 	}
 }

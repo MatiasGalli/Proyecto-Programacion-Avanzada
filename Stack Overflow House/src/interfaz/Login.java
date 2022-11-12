@@ -62,27 +62,27 @@ public class Login extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lbl_rut = new JLabel("RUT (Con gui\u00F3n y numero verificador)");
 		lbl_rut.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lbl_rut.setBounds(70, 40, 200, 13);
 		contentPane.add(lbl_rut);
-		
+
 		textField_rut = new JTextField();
 		textField_rut.setBounds(70, 63, 200, 25);
 		contentPane.add(textField_rut);
 		textField_rut.setColumns(10);
-		
+
 		JLabel lbl_password = new JLabel("Contrase\u00F1a");
 		lbl_password.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lbl_password.setBounds(70, 110, 71, 13);
 		contentPane.add(lbl_password);
-		
+
 		JLabel lbl_newUser = new JLabel("\u00BFNo tienes una cuenta?");
 		lbl_newUser.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lbl_newUser.setBounds(80, 167, 129, 15);
 		contentPane.add(lbl_newUser);
-		
+
 		JButton btn_register = new JButton("Reg\u00EDstrate");
 		btn_register.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btn_register.addActionListener(new ActionListener() {
@@ -99,37 +99,38 @@ public class Login extends JFrame {
 		btn_register.setContentAreaFilled(false);
 		btn_register.setBounds(185, 164, 85, 21);
 		contentPane.add(btn_register);
-		
+
 		JLabel lbl_SOHLogo = new JLabel("Logo");
 		lbl_SOHLogo.setIcon(new ImageIcon(Login.class.getResource("/assets/SOH_logoMin.png")));
 		lbl_SOHLogo.setBounds(10, 227, 36, 26);
 		contentPane.add(lbl_SOHLogo);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(70, 133, 200, 25);
 		contentPane.add(passwordField);
-		
+
 		JButton btn_signIn = new JButton("Ingresar");
 		btn_signIn.setBackground(new Color(255, 255, 255));
 		btn_signIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean userEmpty = textField_rut.getText().equals("");
-				boolean passEmpty = passwordField.getPassword().length==0;
-				if(userEmpty) {
+				boolean passEmpty = passwordField.getPassword().length == 0;
+				if (userEmpty) {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un rut.");
-				}else if (passEmpty) {
+				} else if (passEmpty) {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una clave.");
-				}else {
+				} else {
 					String rut = null;
 					String password = null;
 					boolean admin = false;
+					boolean banned = false;
 					String name = null;
 					try {
-						String sql = "select rut, password, admin, username from users where rut = ?";
+						String sql = "select rut, password, admin, username, banned from users where rut = ?";
 						PreparedStatement st;
 						st = connection.getConnection().prepareStatement(sql);
 						st.setString(1, textField_rut.getText());
@@ -139,31 +140,38 @@ public class Login extends JFrame {
 						password = rs.getString(2);
 						admin = rs.getBoolean(3);
 						name = rs.getString(4);
+						banned = rs.getBoolean(5);
 					} catch (SQLException e1) {
 						rut = null;
 						password = null;
 					}
-					
+
 					String pass = String.valueOf(passwordField.getPassword());
-					if(rut == null){
+					if (rut == null) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "El rut ingresado no existe");
-					}else if(!pass.equals(password)) {
+					} else if (!pass.equals(password)) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "La clave no coincide con el rut ingresado");
-					}else {
-						if (!admin) {
-							UserMenu v3 = new UserMenu(name, connection);
-							v3.setLocationRelativeTo(null);
-							v3.setVisible(true);
-							dispose();
-						}else {
-							AdminMenu v4 = new AdminMenu(connection);
-							v4.setLocationRelativeTo(null);
-							v4.setVisible(true);
-							dispose();
+					} else {
+						if (!banned) {
+							if (!admin) {
+								UserMenu v3 = new UserMenu(name, connection);
+								v3.setLocationRelativeTo(null);
+								v3.setVisible(true);
+								dispose();
+							} else {
+								AdminMenu v4 = new AdminMenu(connection);
+								v4.setLocationRelativeTo(null);
+								v4.setVisible(true);
+								dispose();
+							}
+						} else {
+							JFrame jFrame = new JFrame();
+							jFrame.setAlwaysOnTop(true);
+							JOptionPane.showMessageDialog(jFrame, "El usuario está bloqueado.");
 						}
 					}
 				}

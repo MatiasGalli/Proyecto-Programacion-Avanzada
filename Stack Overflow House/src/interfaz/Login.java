@@ -118,12 +118,12 @@ public class Login extends JFrame {
 				if (userEmpty) {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
-					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un rut.");
-				} else if (passEmpty) {
+					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un RUT.");
+				} if (passEmpty) {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar una clave.");
-				} else {
+				} if (!passEmpty && !userEmpty) {
 					String rut = null;
 					String password = null;
 					boolean admin = false;
@@ -150,11 +150,11 @@ public class Login extends JFrame {
 					if (rut == null) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
-						JOptionPane.showMessageDialog(jFrame, "El rut ingresado no existe");
+						JOptionPane.showMessageDialog(jFrame, "El RUT ingresado no existe, o ingresaste algo que no corresponde a un RUT.");
 					} else if (!pass.equals(password)) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
-						JOptionPane.showMessageDialog(jFrame, "La clave no coincide con el rut ingresado");
+						JOptionPane.showMessageDialog(jFrame, "Clave incorrecta.");
 					} else {
 						if (!banned) {
 							if (!admin) {
@@ -171,7 +171,7 @@ public class Login extends JFrame {
 						} else {
 							JFrame jFrame = new JFrame();
 							jFrame.setAlwaysOnTop(true);
-							JOptionPane.showMessageDialog(jFrame, "El usuario está bloqueado.");
+							JOptionPane.showMessageDialog(jFrame, "Este usuario est\u00E1 bloqueado.");
 						}
 					}
 				}

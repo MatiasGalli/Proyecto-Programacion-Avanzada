@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
@@ -168,10 +169,11 @@ public class Register extends JFrame {
 				boolean verNumEmpty = textField_verificationNumber.getText().equals("");
 				boolean passEmpty = passwordField.getPassword().length == 0;
 				boolean confirmPassEmpty = confirmPasswordField.getPassword().length == 0;
-
+				
+				//If 1. Verifica si los espacios de datos no están vacíos.
 				if (!(userNameEmpty || realNameEmpty || rutEmpty || verNumEmpty || emailEmpty || passEmpty
 						|| confirmPassEmpty)) {
-
+					
 					@SuppressWarnings("unused")
 					int trueRut = 0;
 					try {
@@ -179,19 +181,24 @@ public class Register extends JFrame {
 					} catch (Exception p) {
 						rutEmpty = true;
 					}
-
+					
+					//If 2. Verifica si el espacio de rut tiene valores no numéricos. De estarlo, envía una pop-up. Si no, pasa al 3er if.
 					if (rutEmpty) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame,
 								"El espacio de RUT tiene caracteres inv\u00E1lidos. Coloque s\u00F3lo cifras num\u00E9ricas.");
 					} else {
+						
+						//If 3. Verifica que haya sólo un símbolo en la casilla de dígito verificador.
 						if (textField_verificationNumber.getText().length() != 1) {
 							JFrame jFrame = new JFrame();
 							jFrame.setAlwaysOnTop(true);
 							JOptionPane.showMessageDialog(jFrame,
 									"Ha colocado m\u00E1s de un d\u00EDgito en la casilla de d\u00EDgito verificador.");
 						} else {
+							
+							//Verifica si el char en el dígito verificador es un dígito entre el 0 y el 9, o si es la letra "k".
 							verNumEmpty = true;
 							for (int i = 0; i < DV.length; i++) {
 								if (DV[i] == textField_verificationNumber.getText().charAt(0)) {
@@ -199,13 +206,15 @@ public class Register extends JFrame {
 									break;
 								}
 							}
-
+							
+							//If 4. Ve si el digito verificador es un dígito o la letra k.
 							if (verNumEmpty) {
 								JFrame jFrame = new JFrame();
 								jFrame.setAlwaysOnTop(true);
 								JOptionPane.showMessageDialog(jFrame,
 										"El d\u00EDgito verificador ingresado no es válido.");
 							} else {
+								
 								String[] rutVector = textField_rut.getText().split("");
 								int sizeRut = rutVector.length;
 
@@ -227,60 +236,95 @@ public class Register extends JFrame {
 								} else {
 									aux2 = Integer.parseInt(textField_verificationNumber.getText());
 								}
-
+								
+								//If 5: Verifica si el R.U.T. es válido dependiendo del dígito verificador.
 								if (aux2 != aux1) {
 									JFrame jFrame = new JFrame();
 									jFrame.setAlwaysOnTop(true);
 									JOptionPane.showMessageDialog(jFrame, "El RUT ingresado no es válido.");
 								} else {
-
-									if (!(String.valueOf(confirmPasswordField.getPassword())
-											.equals(String.valueOf(passwordField.getPassword())))) {
+									
+									//Corroboración que el RUT no se halle la en la database.
+									String rut_aux = null;
+									boolean banned = true;
+									try {
+										String sql = "select rut, banned from users where rut = ?";
+										PreparedStatement st;
+										st = connection.getConnection().prepareStatement(sql);
+										st.setString(1, textField_rut.getText()+"-"+textField_verificationNumber.getText());
+										ResultSet rs = st.executeQuery();
+										rs.next();
+										rut_aux = rs.getString(1);
+										banned = rs.getBoolean(2);
+									} catch (SQLException e1) {
+										rut_aux = null;
+										banned = true;
+									}
+									
+									//If 5,5: Corrobora que el RUT ingresado NO esté ya en la base de datos.
+									if (rut_aux != null) {
 										JFrame jFrame = new JFrame();
 										jFrame.setAlwaysOnTop(true);
-										JOptionPane.showMessageDialog(jFrame, "Las contrase\u00F1as no coinciden.");
-									} else {
-
-										String[] auxEmail = textField_email.getText().split("@");
-
-										if (auxEmail.length != 2) {
-											JFrame jFrame = new JFrame();
-											jFrame.setAlwaysOnTop(true);
-											JOptionPane.showMessageDialog(jFrame,
-													"El texto en la casilla de E-mail no es un E-mail v\u00E1lido.");
-										} else if (!auxEmail[1].contains(".")) {
-											JFrame jFrame = new JFrame();
-											jFrame.setAlwaysOnTop(true);
-											JOptionPane.showMessageDialog(jFrame,
-													"El Email no tiene una direcci\u00F3n v\u00E1lida.");
+										if (banned) {
+											JOptionPane.showMessageDialog(jFrame, "El RUT ingresado ha sido vetado de ingresar al sistema nuevamente.");
 										} else {
+											JOptionPane.showMessageDialog(jFrame, "¡Este RUT ya pertenece a otro usuario!");
+										}
+									} else {
+										//If 6: Revisa si las contraseñas coinciden
+										if (!(String.valueOf(confirmPasswordField.getPassword())
+												.equals(String.valueOf(passwordField.getPassword())))) {
 											JFrame jFrame = new JFrame();
 											jFrame.setAlwaysOnTop(true);
-											JOptionPane.showMessageDialog(jFrame, "¡Cuenta creada exitosamente!");
-											String user = textField_userName.getText();
-											String fullname = textField_fullName.getText();
-											String rut = textField_rut.getText();
-											String email = textField_email.getText();
-											String verificationNumber = textField_verificationNumber.getText();
-											String password = String.valueOf(passwordField.getPassword());
-											String fullrut = rut + "-" + verificationNumber;
-											try {
-												insertUser(connection, fullrut, fullname, user, null, email, password);
-											} catch (SQLException e1) {
-												e1.printStackTrace();
-											}
-											if (!admin) {
-												UserMenu v3 = new UserMenu(user, connection);
-												v3.setLocationRelativeTo(null);
-												v3.setVisible(true);
-												dispose();
-											}else {
-												AdminMenu v4 = new AdminMenu(connection);
-												v4.setLocationRelativeTo(null);
-												v4.setVisible(true);
-												dispose();
-											}
+											JOptionPane.showMessageDialog(jFrame, "Las contrase\u00F1as no coinciden.");
+										} else {
+
+											String[] auxEmail = textField_email.getText().split("@");
 											
+											//Ifs 7: Revisa si la casilla de Emails es válida
+											if (auxEmail.length != 2) {
+												JFrame jFrame = new JFrame();
+												jFrame.setAlwaysOnTop(true);
+												JOptionPane.showMessageDialog(jFrame,
+														"El texto en la casilla de E-mail no es un E-mail v\u00E1lido.");
+											} else if (!auxEmail[1].contains(".")) {
+												JFrame jFrame = new JFrame();
+												jFrame.setAlwaysOnTop(true);
+												JOptionPane.showMessageDialog(jFrame,
+														"El Email no tiene una direcci\u00F3n v\u00E1lida.");
+											} else {
+												
+												//Finalmente la cuenta es creada.
+												JFrame jFrame = new JFrame();
+												jFrame.setAlwaysOnTop(true);
+												JOptionPane.showMessageDialog(jFrame, "¡Cuenta creada exitosamente!");
+												String user = textField_userName.getText();
+												String fullname = textField_fullName.getText();
+												String rut = textField_rut.getText();
+												String email = textField_email.getText();
+												String verificationNumber = textField_verificationNumber.getText();
+												String password = String.valueOf(passwordField.getPassword());
+												String fullrut = rut + "-" + verificationNumber;
+												try {
+													insertUser(connection, fullrut, fullname, user, null, email, password);
+												} catch (SQLException e1) {
+													e1.printStackTrace();
+												}
+												
+												//If 8. Verifica si el usuario no es admin.
+												if (!admin) {
+													UserMenu v3 = new UserMenu(user, connection);
+													v3.setLocationRelativeTo(null);
+													v3.setVisible(true);
+													dispose();
+												}else {
+													AdminMenu v4 = new AdminMenu(connection);
+													v4.setLocationRelativeTo(null);
+													v4.setVisible(true);
+													dispose();
+												}
+												
+											}
 										}
 									}
 								}

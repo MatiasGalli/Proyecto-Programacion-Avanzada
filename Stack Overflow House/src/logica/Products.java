@@ -83,7 +83,7 @@ public class Products {
 	
 	public void changeProductStock(SQL_Manager connection,int stock ,String id) throws SQLException {
 		
-		String sql = "update product set stock = ? where id = ?";
+		String sql = "update product set stock = stock +  ? where id = ?";
 		
 		PreparedStatement st = connection.getConnection().prepareStatement(sql);
 		

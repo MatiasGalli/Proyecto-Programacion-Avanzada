@@ -12,7 +12,7 @@ public class Products {
 		String sql;
 		Statement st;
 		ResultSet rs;
-		sql = "Select * from product";
+		sql = "Select * from product where stock <> 0";
 
 		try {
 			st = connection.getConnection().createStatement();
@@ -80,5 +80,18 @@ public class Products {
 
 	
 	}
+	
+	public void changeProductStock(SQL_Manager connection,int stock ,String id) throws SQLException {
+		
+		String sql = "update product set stock = ? where id = ?";
+		
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		
+		st.setFloat(1, stock);
+		st.setString(2, id);
+		
+		st.executeUpdate();
+	}
+	
 
 }

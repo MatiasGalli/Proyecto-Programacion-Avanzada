@@ -200,7 +200,7 @@ public class UserMenu extends JFrame {
 		String sql, category;
 		Statement st;
 		ResultSet rs;
-		sql = "Select * from product";
+		sql = "Select * from product where stock <> 0 ";
 
 		try {
 			st = connection.getConnection().createStatement();
@@ -225,7 +225,7 @@ public class UserMenu extends JFrame {
 	public String countProducts(SQL_Manager connection) throws SQLException {
 		
 		String sql = "select id from product order by id desc limit 1";
-		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGï¿½N PRODUCTO
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		if(rs.next()) {

@@ -65,4 +65,37 @@ public class Users {
 			e.printStackTrace();
 		}
 	}
+		
+	public void addUsersAddress(SQL_Manager connection, String username, String address ) throws SQLException {
+		String sql = "update users set address = ? where username = ?";
+		
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, address);
+		st.setString(2, username);
+		
+		st.executeUpdate();
+		
+	}
+	
+	public void changePassword(SQL_Manager connection, String username,String password) throws SQLException {
+		
+		String sql = "update users set password = ? where username = ?";
+		
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, password);
+		st.setString(2, username);
+		
+		st.executeUpdate();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
 }

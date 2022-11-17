@@ -59,12 +59,26 @@ public class Products {
 	public String countProducts(SQL_Manager connection) throws SQLException {
 		
 		String sql = "select id from product order by id desc limit 1";
-		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		//FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGï¿½N PRODUCTO
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		rs.next();
 		String id = rs.getString("id");
 		return id;
+	}
+	
+	public void changeProductPrice(SQL_Manager connection,float price ,String id) throws SQLException {
+		
+		String sql = "update product set price = ? where id = ?";
+		
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		
+		st.setFloat(1, price);
+		st.setString(2, id);
+		
+		st.executeUpdate();
+
+	
 	}
 
 }

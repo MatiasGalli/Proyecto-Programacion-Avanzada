@@ -28,7 +28,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Panel;
 
 @SuppressWarnings("serial")
 public class AdminMenuUsersBan extends JFrame {
@@ -46,7 +45,8 @@ public class AdminMenuUsersBan extends JFrame {
 	private JRadioButton rdbtn_asc;
 	private JRadioButton rdbtn_desc;
 	private JButton btn_search;
-	private JButton btn_search_1;
+	private JButton btn_order;
+	private JScrollPane scrollPane_userInfo;
 
 	/**
 	 * Launch the application.
@@ -119,38 +119,7 @@ public class AdminMenuUsersBan extends JFrame {
 		contentPane.add(comboBox_categorySearch);
 
 		table_userInfo = new JTable();
-		table_userInfo.setShowVerticalLines(false);
-		table_userInfo.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		table_userInfo.setBorder(null);
-		int cant = 0;
-		try {
-			cant = countUsers(connection);
-		} catch (NumberFormatException | SQLException e) {
-			e.printStackTrace();
-		}
-		Object[][] table = new Object[cant][5];
-		Object[][] values = getUsers(connection, table);
-		table_userInfo.setModel(new DefaultTableModel(values, new String[] { "RUT", "Nombre de usuario",
-				"Nombre Completo", "Correo Electr\u00F3nico", "Bloqueado" }) {
-			boolean[] columnEditables = new boolean[] { false, false, false, false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		table_userInfo.getColumnModel().getColumn(0).setPreferredWidth(69);
-		table_userInfo.getColumnModel().getColumn(1).setResizable(false);
-		table_userInfo.getColumnModel().getColumn(1).setPreferredWidth(83);
-		table_userInfo.getColumnModel().getColumn(2).setResizable(false);
-		table_userInfo.getColumnModel().getColumn(2).setPreferredWidth(213);
-		table_userInfo.getColumnModel().getColumn(3).setResizable(false);
-		table_userInfo.getColumnModel().getColumn(3).setPreferredWidth(172);
-		table_userInfo.getColumnModel().getColumn(4).setPreferredWidth(15);
-		table_userInfo.setRowHeight(26);
-		table_userInfo.setBounds(60, 110, 900, 310);
-		JScrollPane scrollPane_userInfo = new JScrollPane(table_userInfo);
-		scrollPane_userInfo.setLocation(60, 120);
-		scrollPane_userInfo.setSize(900, 330);
+		scrollPane_userInfo = showUsers(connection,table_userInfo,"fullname","asc");
 		contentPane.add(scrollPane_userInfo);
 
 		lbl_SOHlogo = new JLabel("Image");
@@ -161,9 +130,8 @@ public class AdminMenuUsersBan extends JFrame {
 		btn_ban = new JButton("BLOQUEAR");
 		btn_ban.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String rut = (String) values[table_userInfo.getSelectedRow()][0];
-				System.out.println(rut);
-				banUser(connection,rut);
+				String rut = (String) table_userInfo.getValueAt(table_userInfo.getSelectedRow(), 0);
+				banUser(connection,rut,true);
 				JFrame jFrame = new JFrame();
 				jFrame.setAlwaysOnTop(true);
 				JOptionPane.showMessageDialog(jFrame,"El usuario ha sido bloqueado exitosamente.");
@@ -175,6 +143,15 @@ public class AdminMenuUsersBan extends JFrame {
 		contentPane.add(btn_ban);
 
 		btn_unban = new JButton("DESBLOQUEAR");
+		btn_unban.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String rut = (String) table_userInfo.getValueAt(table_userInfo.getSelectedRow(), 0);
+				banUser(connection,rut,false);
+				JFrame jFrame = new JFrame();
+				jFrame.setAlwaysOnTop(true);
+				JOptionPane.showMessageDialog(jFrame,"El usuario ha sido desbloqueado exitosamente.");
+			}
+		});
 		btn_unban.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_unban.setBackground(Color.WHITE);
 		btn_unban.setBounds(140, 530, 180, 26);
@@ -209,16 +186,51 @@ public class AdminMenuUsersBan extends JFrame {
 		group.add(rdbtn_desc);
 
 		btn_search = new JButton("BUSCAR");
+		btn_search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTable table_userInfoUpdate = new JTable();
+				scrollPane_userInfo = showUsers(connection,table_userInfoUpdate,"fullname","asc");
+				contentPane.add(scrollPane_userInfo);
+			}
+		});
 		btn_search.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_search.setBackground(Color.WHITE);
 		btn_search.setBounds(421, 84, 140, 26);
 		contentPane.add(btn_search);
-
-		btn_search_1 = new JButton("ORDENAR");
-		btn_search_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btn_search_1.setBackground(Color.WHITE);
-		btn_search_1.setBounds(580, 550, 132, 26);
-		contentPane.add(btn_search_1);
+		
+		btn_order = new JButton("ORDENAR");
+		btn_order.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String order = (String) comboBox_categoryOrder.getSelectedItem();
+				if (order.equals("RUT")) {
+					order = "rut";
+				}else if (order.equals("Nombre de usuario")) {
+					order = "username";
+				}else if (order.equals("Nombre Completo")) {
+					order = "fullname";
+				}else if (order.equals("Correo Electrónico")) {
+					order = "email";
+				}else if (order.equals("Bloqueado")) {
+					order = "banned";
+				}
+				group.getSelection().getSelectedObjects();
+				String asc = null;
+				Object[] ascbtn = rdbtn_asc.getSelectedObjects();
+				if (ascbtn == null) {
+					asc = "DESC";
+				}else {
+					asc = "ASC";
+				}
+				//ACTUALIZAR TABLA;
+				JTable table_userInfoUpdate = new JTable();
+				scrollPane_userInfo = showUsers(connection,table_userInfoUpdate,order,asc);
+				contentPane.add(scrollPane_userInfo);
+			}
+		});
+		btn_order.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btn_order.setBackground(Color.WHITE);
+		btn_order.setBounds(580, 550, 132, 26);
+		contentPane.add(btn_order);
 	}
 
 	public Object[][] getUsers(SQL_Manager connection, Object[][] values) {
@@ -227,7 +239,7 @@ public class AdminMenuUsersBan extends JFrame {
 		String sql, ban;
 		Statement st;
 		ResultSet rs;
-		sql = "Select * from users";
+		sql = "Select * from users order by fullname";
 
 		try {
 			st = connection.getConnection().createStatement();
@@ -269,16 +281,73 @@ public class AdminMenuUsersBan extends JFrame {
 		return 0;
 	}
 
-	public void banUser(SQL_Manager connection, String rut) {
+	public void banUser(SQL_Manager connection, String rut, boolean ban) {
 		String sql = "update users set banned = ? where rut = ?";
 		PreparedStatement st;
 		try {
 			st = connection.getConnection().prepareStatement(sql);
-			st.setBoolean(1, true);
+			st.setBoolean(1, ban);
 			st.setString(2, rut);
 			st.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public JScrollPane showUsers(SQL_Manager connection, JTable table, String category, String asc){
+		try{
+			table.setShowVerticalLines(false);
+			table.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			table.setBorder(null);
+			String sql, ban;
+			PreparedStatement st;
+			ResultSet rs;
+			sql = "Select * from users order by " + category + " " + asc;
+			st = connection.getConnection().prepareStatement(sql);
+			rs = st.executeQuery();
+			String titles[]={"RUT", "Nombre de usuario","Nombre Completo", "Correo Electr\u00F3nico", "Bloqueado"};
+			DefaultTableModel model = new DefaultTableModel(null,titles) {
+				boolean[] columnEditables = new boolean[] {
+						false, false, false, false, false
+					};
+					public boolean isCellEditable(int row, int column) {
+						return columnEditables[column];
+					}
+				};
+			String row[]=new String[6];
+			while(rs.next()){
+				if (!rs.getBoolean("admin")) {
+					row[0]=rs.getString("rut");
+					row[1]=rs.getString("username");
+					row[2]=rs.getString("fullname");
+					row[3]=rs.getString("email");
+					if (rs.getBoolean("banned"))
+						ban = "Si";
+					else
+						ban = "No";
+					row[4]= ban;
+					model.addRow(row);
+				}
+			}
+			table.setModel(model);
+			table.getColumnModel().getColumn(0).setPreferredWidth(69);
+			table.getColumnModel().getColumn(1).setResizable(false);
+			table.getColumnModel().getColumn(1).setPreferredWidth(83);
+			table.getColumnModel().getColumn(2).setResizable(false);
+			table.getColumnModel().getColumn(2).setPreferredWidth(213);
+			table.getColumnModel().getColumn(3).setResizable(false);
+			table.getColumnModel().getColumn(3).setPreferredWidth(172);
+			table.getColumnModel().getColumn(4).setPreferredWidth(15);
+			table.setRowHeight(26);
+			table.setBounds(60, 110, 900, 310);
+			JScrollPane scrollPane_userInfo = new JScrollPane(table);
+			scrollPane_userInfo.setLocation(60, 120);
+			scrollPane_userInfo.setSize(900, 330);
+			scrollPane_userInfo.setViewportView(table);
+			return scrollPane_userInfo;
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(null,e);
+		}
+		return null;
 	}
 }

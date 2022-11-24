@@ -119,7 +119,12 @@ public class AdminMenuUsersBan extends JFrame {
 		contentPane.add(comboBox_categorySearch);
 
 		table_userInfo = new JTable();
-		scrollPane_userInfo = showUsers(connection,table_userInfo,"fullname","asc");
+		scrollPane_userInfo = new JScrollPane();
+		
+		//Show the table and add the first JScrollPane to the Main Pane.
+		
+		table_userInfo = updateTable(connection,"fullname","asc");
+		scrollPane_userInfo = showUsers(table_userInfo);
 		contentPane.add(scrollPane_userInfo);
 
 		lbl_SOHlogo = new JLabel("Image");
@@ -188,8 +193,12 @@ public class AdminMenuUsersBan extends JFrame {
 		btn_search = new JButton("BUSCAR");
 		btn_search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JTable table_userInfoUpdate = new JTable();
-				scrollPane_userInfo = showUsers(connection,table_userInfoUpdate,"fullname","asc");
+				
+				//Here the table does not only updates itself, but it deletes the previous one.
+				
+				table_userInfo = updateTable(connection,"fullname","asc");
+				scrollPane_userInfo = showUsers(table_userInfo);
+				remove(contentPane.getComponentAt(60, 120));
 				contentPane.add(scrollPane_userInfo);
 			}
 		});
@@ -221,9 +230,11 @@ public class AdminMenuUsersBan extends JFrame {
 				}else {
 					asc = "ASC";
 				}
-				//ACTUALIZAR TABLA;
-				JTable table_userInfoUpdate = new JTable();
-				scrollPane_userInfo = showUsers(connection,table_userInfoUpdate,order,asc);
+				//LA TABLA SE ACTUALIZA, SE CARGA AL SCROLLPANE, LA TABLA ANTERIOR SE ELIMINA Y SE AGREGA LA NUEVA A LA VENTANA.
+				
+				table_userInfo = updateTable(connection,order,asc);
+				scrollPane_userInfo = showUsers(table_userInfo);
+				remove(contentPane.getComponentAt(60, 120));
 				contentPane.add(scrollPane_userInfo);
 			}
 		});
@@ -232,7 +243,8 @@ public class AdminMenuUsersBan extends JFrame {
 		btn_order.setBounds(580, 550, 132, 26);
 		contentPane.add(btn_order);
 	}
-
+	
+	/*
 	public Object[][] getUsers(SQL_Manager connection, Object[][] values) {
 
 		Object[][] list = values;
@@ -265,7 +277,9 @@ public class AdminMenuUsersBan extends JFrame {
 		}
 		return list;
 	}
-
+	
+	*/
+	
 	public int countUsers(SQL_Manager connection) throws SQLException {
 
 		int cant = 0;
@@ -294,6 +308,9 @@ public class AdminMenuUsersBan extends JFrame {
 		}
 	}
 	
+	/*
+	 * Código Legacy. No usar. Por ahora.
+	 * 
 	public JScrollPane showUsers(SQL_Manager connection, JTable table, String category, String asc){
 		try{
 			table.setShowVerticalLines(false);
@@ -345,6 +362,77 @@ public class AdminMenuUsersBan extends JFrame {
 			scrollPane_userInfo.setSize(900, 330);
 			scrollPane_userInfo.setViewportView(table);
 			return scrollPane_userInfo;
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(null,e);
+		}
+		return null;
+	}
+	
+	*/
+	
+	//Crea un JScrollPane a partir de una tabla.
+	public JScrollPane showUsers (JTable table){
+		try{
+			JScrollPane scrollPane_userInfo = new JScrollPane(table);
+			scrollPane_userInfo.setLocation(60, 120);
+			scrollPane_userInfo.setSize(900, 330);
+			scrollPane_userInfo.setViewportView(table);
+			return scrollPane_userInfo;
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(null,e);
+		}
+		return null;
+	}
+	
+	//Crea una tabla nueva dado ciertos parámetros.
+	public JTable updateTable(SQL_Manager connection, String category, String asc){
+		try{
+			JTable table = new JTable();
+			table.setShowVerticalLines(false);
+			table.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			table.setBorder(null);
+			String sql, ban;
+			PreparedStatement st;
+			ResultSet rs;
+			sql = "Select * from users order by " + category + " " + asc;
+			st = connection.getConnection().prepareStatement(sql);
+			rs = st.executeQuery();
+			String titles[]={"RUT", "Nombre de usuario","Nombre Completo", "Correo Electr\u00F3nico", "Bloqueado"};
+			DefaultTableModel model = new DefaultTableModel(null,titles) {
+				boolean[] columnEditables = new boolean[] {
+						false, false, false, false, false
+					};
+					public boolean isCellEditable(int row, int column) {
+						return columnEditables[column];
+					}
+				};
+			String row[]=new String[6];
+			while(rs.next()){
+				if (!rs.getBoolean("admin")) {
+					row[0]=rs.getString("rut");
+					row[1]=rs.getString("username");
+					row[2]=rs.getString("fullname");
+					row[3]=rs.getString("email");
+					if (rs.getBoolean("banned"))
+						ban = "Si";
+					else
+						ban = "No";
+					row[4]= ban;
+					model.addRow(row);
+				}
+			}
+			table.setModel(model);
+			table.getColumnModel().getColumn(0).setPreferredWidth(69);
+			table.getColumnModel().getColumn(1).setResizable(false);
+			table.getColumnModel().getColumn(1).setPreferredWidth(83);
+			table.getColumnModel().getColumn(2).setResizable(false);
+			table.getColumnModel().getColumn(2).setPreferredWidth(213);
+			table.getColumnModel().getColumn(3).setResizable(false);
+			table.getColumnModel().getColumn(3).setPreferredWidth(172);
+			table.getColumnModel().getColumn(4).setPreferredWidth(15);
+			table.setRowHeight(26);
+			table.setBounds(60, 110, 900, 310);
+			return (table);
 		}catch(Exception e){
 			JOptionPane.showMessageDialog(null,e);
 		}

@@ -126,11 +126,11 @@ public class AdminMenuProductsUpload extends JFrame {
 		JComboBox comboBox_category = new JComboBox();
 		int cant = 10;
 		try {
-			cant = Integer.parseInt(countCategories(connection));
+			cant = countCategories(connection);
 		} catch (NumberFormatException | SQLException e3) {
 			e3.printStackTrace();
 		}
-		String[] list = new String[cant + 1];
+		String[] list = new String[cant];
 		String[] values = null;
 		try {
 			values = getCategories(connection, list);
@@ -202,7 +202,7 @@ public class AdminMenuProductsUpload extends JFrame {
 
 							String id = "-1";
 							try {
-								id = countProducts(connection);
+								id = countProductsID(connection);
 							} catch (SQLException e2) {
 								e2.printStackTrace();
 							}
@@ -274,7 +274,7 @@ public class AdminMenuProductsUpload extends JFrame {
 
 	}
 
-	public String countProducts(SQL_Manager connection) throws SQLException {
+	public String countProductsID(SQL_Manager connection) throws SQLException {
 
 		String sql = "select id from product order by id desc limit 1";
 		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
@@ -284,15 +284,15 @@ public class AdminMenuProductsUpload extends JFrame {
 		String id = rs.getString("id");
 		return id;
 	}
+	
+	public int countCategories(SQL_Manager connection) throws SQLException {
 
-	public String countCategories(SQL_Manager connection) throws SQLException {
-
-		String sql = "select id from category order by id desc limit 1";
+		String sql = "select count(*) as id from category";
 
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		rs.next();
-		String id = rs.getString("id");
+		int id = rs.getInt("id");
 		return id;
 	}
 

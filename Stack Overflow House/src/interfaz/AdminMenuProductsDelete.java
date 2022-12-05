@@ -113,10 +113,10 @@ public class AdminMenuProductsDelete extends JFrame {
 		btn_delete.setBounds(400, 420, 138, 26);
 		contentPane.add(btn_delete);
 		
-		JLabel lbl_search = new JLabel("Seleccione un producto de la lista:");
-		lbl_search.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_search.setBounds(60, 35, 359, 26);
-		contentPane.add(lbl_search);
+		JLabel lbl_select = new JLabel("Seleccione un producto de la lista:");
+		lbl_select.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lbl_select.setBounds(60, 35, 359, 26);
+		contentPane.add(lbl_select);
 	}
 	
 	//Crea un JScrollPane a partir de una tabla.

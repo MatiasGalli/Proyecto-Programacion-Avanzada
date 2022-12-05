@@ -101,6 +101,14 @@ public class AdminMenu extends JFrame {
 		panel_products.add(btn_productsEdit);
 		
 		JButton btn_productsDelete = new JButton("ELIMINAR");
+		btn_productsDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenuProductsDelete v6 = new AdminMenuProductsDelete(connection);
+				v6.setLocationRelativeTo(null);
+				v6.setVisible(true);
+				dispose();
+			}
+		});
 		btn_productsDelete.setBackground(new Color(255, 255, 255));
 		btn_productsDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btn_productsDelete.setBounds(10, 165, 100, 21);
@@ -152,6 +160,14 @@ public class AdminMenu extends JFrame {
 		panel_categories.add(btn_categoriesEdit);
 		
 		JButton btn_categoriesDelete = new JButton("ELIMINAR");
+		btn_categoriesDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenuCategoriesDelete v7 = new AdminMenuCategoriesDelete(connection);
+				v7.setLocationRelativeTo(null);
+				v7.setVisible(true);
+				dispose();
+			}
+		});
 		btn_categoriesDelete.setBackground(new Color(255, 255, 255));
 		btn_categoriesDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btn_categoriesDelete.setBounds(10, 165, 100, 21);

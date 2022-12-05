@@ -94,9 +94,6 @@ public class AdminMenuCategoriesUpload extends JFrame {
 				boolean nameEmpty = textField_name.getText().equals("");
 
 				if (!nameEmpty) {
-					JFrame jFrame = new JFrame();
-					JOptionPane.showMessageDialog(jFrame, "¡Categoría creada exitosamente!");
-
 					String id = "-1";
 					try {
 						id = countCategories(connection);
@@ -109,11 +106,9 @@ public class AdminMenuCategoriesUpload extends JFrame {
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					AdminMenu v4 = new AdminMenu(connection);
-					v4.setVisible(true);
-					dispose();
 				} else {
 					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "No se le ha asignado ningún nombre a la categoría.");
 				}
 			}
@@ -126,13 +121,37 @@ public class AdminMenuCategoriesUpload extends JFrame {
 	}
 
 	public void insertCategories(SQL_Manager connection, String id, String name) throws SQLException {
+		String categoryName;
+		String sql = "select name from category where name = ?";
+		PreparedStatement st;
+		st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, name);
+		ResultSet rs = st.executeQuery();
+		if (rs.next()) {
+			categoryName = rs.getString("name");
+		}else {
+			categoryName = "-1";
+		}
 		
-		String sql = "Insert into category(id,name) values(?,?)";
-		PreparedStatement st = connection.getConnection().prepareStatement(sql);
-		st.setString(1, id);
-		st.setString(2, name);
-		st.executeUpdate();
-		
+		if (categoryName.equals("-1")) {
+			sql = "Insert into category(id,name) values(?,?)";
+			PreparedStatement st1 = connection.getConnection().prepareStatement(sql);
+			st1.setString(1, id);
+			st1.setString(2, name);
+			st1.executeUpdate();
+			JFrame jFrame = new JFrame();
+			jFrame.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(jFrame, "¡Categoría creada exitosamente!");
+			
+			AdminMenu v4 = new AdminMenu(connection);
+			v4.setLocationRelativeTo(null);
+			v4.setVisible(true);
+			dispose();
+		}else {
+			JFrame jFrame = new JFrame();
+			jFrame.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(jFrame,"El nombre de categoría " + categoryName + " ya existe");
+		}
 	}
 	
 	public String countCategories(SQL_Manager connection) throws SQLException {
@@ -147,4 +166,6 @@ public class AdminMenuCategoriesUpload extends JFrame {
 		}
 		return "-1";
 	}
+	
+	
 }

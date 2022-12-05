@@ -162,6 +162,7 @@ public class AdminMenuProductsUpload extends JFrame {
 
 					if (stockEmpty) {
 						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame,
 								"El espacio de stock tiene caracteres inv\u00E1lidos. Coloque s\u00F3lo cifras num\u00E9ricas.");
 					} else {
@@ -174,10 +175,12 @@ public class AdminMenuProductsUpload extends JFrame {
 
 						if (priceEmpty) {
 							JFrame jFrame = new JFrame();
+							jFrame.setAlwaysOnTop(true);
 							JOptionPane.showMessageDialog(jFrame,
 									"El espacio de precio tiene caracteres inv\u00E1lidos. Coloque s\u00F3lo cifras num\u00E9ricas.");
 						} else {
 							JFrame jFrame = new JFrame();
+							jFrame.setAlwaysOnTop(true);
 							JOptionPane.showMessageDialog(jFrame, "¡Producto creado exitosamente!");
 
 							String name = textField_name.getText();
@@ -210,12 +213,14 @@ public class AdminMenuProductsUpload extends JFrame {
 								e1.printStackTrace();
 							}
 							AdminMenu v4 = new AdminMenu(connection);
+							v4.setLocationRelativeTo(null);
 							v4.setVisible(true);
 							dispose();
 						}
 					}
 				} else {
 					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
 					String x = "";
 					if (nameEmpty)
 						x = x + "Nombre del producto, ";
@@ -229,7 +234,7 @@ public class AdminMenuProductsUpload extends JFrame {
 						x = x + "Descripción, ";
 
 					x = x.substring(0, x.length() - 2);
-
+					
 					JOptionPane.showMessageDialog(jFrame, "Los siguientes espacios no tienen datos: " + x + ".");
 				}
 			}

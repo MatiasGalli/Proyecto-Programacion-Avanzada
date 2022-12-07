@@ -1,7 +1,9 @@
 package logica;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Product_cart {
 
@@ -24,6 +26,23 @@ public class Product_cart {
 		st.setString(2, product_id);
 		st.executeUpdate();
 		
+	}
+		
+	public void getPCart(SQL_Manager connection) throws SQLException {
+		
+		String sql = "select p.name, p.price , pc.amount, (p.price * pc.amount) as totalfrom product_cart pc inner join product p on p.id = pc.product_id";
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		
+		displayPCart(rs);
 		
 	}
+	public void displayPCart(ResultSet rs) throws SQLException {
+		while(rs.next()) {
+			System.out.println(rs.getString("name") + "\t" + rs.getFloat("price") + "\t" + rs.getInt("amount") + "\t" + rs.getFloat("total"));
+			
+		}
+	}
+	
+	
 }

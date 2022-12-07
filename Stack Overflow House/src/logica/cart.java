@@ -1,7 +1,9 @@
 package logica;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class cart {
 
@@ -28,8 +30,16 @@ public class cart {
 	
 	
 	
-	
-	
+	public int countCartID(SQL_Manager connection) throws SQLException {
+
+		String sql = "select id from cart order by id desc limit 1";
+		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NING�N PRODUCTO
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		rs.next();
+		int id = rs.getInt("id");
+		return id;
+	}
 	
 	
 	

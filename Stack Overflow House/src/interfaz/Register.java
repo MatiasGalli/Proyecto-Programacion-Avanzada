@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 
@@ -170,7 +171,7 @@ public class Register extends JFrame {
 				boolean passEmpty = passwordField.getPassword().length == 0;
 				boolean confirmPassEmpty = confirmPasswordField.getPassword().length == 0;
 				
-				//If 1. Verifica si los espacios de datos no están vacíos.
+				//If 1. Verifica si los espacios de datos no estï¿½n vacï¿½os.
 				if (!(userNameEmpty || realNameEmpty || rutEmpty || verNumEmpty || emailEmpty || passEmpty
 						|| confirmPassEmpty)) {
 					
@@ -182,7 +183,7 @@ public class Register extends JFrame {
 						rutEmpty = true;
 					}
 					
-					//If 2. Verifica si el espacio de rut tiene valores no numéricos. De estarlo, envía una pop-up. Si no, pasa al 3er if.
+					//If 2. Verifica si el espacio de rut tiene valores no numï¿½ricos. De estarlo, envï¿½a una pop-up. Si no, pasa al 3er if.
 					if (rutEmpty) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
@@ -190,7 +191,7 @@ public class Register extends JFrame {
 								"El espacio de RUT tiene caracteres inv\u00E1lidos. Coloque s\u00F3lo cifras num\u00E9ricas.");
 					} else {
 						
-						//If 3. Verifica que haya sólo un símbolo en la casilla de dígito verificador.
+						//If 3. Verifica que haya sï¿½lo un sï¿½mbolo en la casilla de dï¿½gito verificador.
 						if (textField_verificationNumber.getText().length() != 1) {
 							JFrame jFrame = new JFrame();
 							jFrame.setAlwaysOnTop(true);
@@ -198,7 +199,7 @@ public class Register extends JFrame {
 									"Ha colocado m\u00E1s de un d\u00EDgito en la casilla de d\u00EDgito verificador.");
 						} else {
 							
-							//Verifica si el char en el dígito verificador es un dígito entre el 0 y el 9, o si es la letra "k".
+							//Verifica si el char en el dï¿½gito verificador es un dï¿½gito entre el 0 y el 9, o si es la letra "k".
 							verNumEmpty = true;
 							for (int i = 0; i < DV.length; i++) {
 								if (DV[i] == textField_verificationNumber.getText().charAt(0)) {
@@ -207,12 +208,12 @@ public class Register extends JFrame {
 								}
 							}
 							
-							//If 4. Ve si el digito verificador es un dígito o la letra k.
+							//If 4. Ve si el digito verificador es un dï¿½gito o la letra k.
 							if (verNumEmpty) {
 								JFrame jFrame = new JFrame();
 								jFrame.setAlwaysOnTop(true);
 								JOptionPane.showMessageDialog(jFrame,
-										"El d\u00EDgito verificador ingresado no es válido.");
+										"El d\u00EDgito verificador ingresado no es vï¿½lido.");
 							} else {
 								
 								String[] rutVector = textField_rut.getText().split("");
@@ -237,14 +238,14 @@ public class Register extends JFrame {
 									aux2 = Integer.parseInt(textField_verificationNumber.getText());
 								}
 								
-								//If 5: Verifica si el R.U.T. es válido dependiendo del dígito verificador.
+								//If 5: Verifica si el R.U.T. es vï¿½lido dependiendo del dï¿½gito verificador.
 								if (aux2 != aux1) {
 									JFrame jFrame = new JFrame();
 									jFrame.setAlwaysOnTop(true);
-									JOptionPane.showMessageDialog(jFrame, "El RUT ingresado no es válido.");
+									JOptionPane.showMessageDialog(jFrame, "El RUT ingresado no es vï¿½lido.");
 								} else {
 									
-									//Corroboración que el RUT no se halle la en la database.
+									//Corroboraciï¿½n que el RUT no se halle la en la database.
 									String rut_aux = null;
 									boolean banned = true;
 									try {
@@ -261,17 +262,17 @@ public class Register extends JFrame {
 										banned = true;
 									}
 									
-									//If 5,5: Corrobora que el RUT ingresado NO esté ya en la base de datos.
+									//If 5,5: Corrobora que el RUT ingresado NO estï¿½ ya en la base de datos.
 									if (rut_aux != null) {
 										JFrame jFrame = new JFrame();
 										jFrame.setAlwaysOnTop(true);
 										if (banned) {
 											JOptionPane.showMessageDialog(jFrame, "El RUT ingresado ha sido vetado de ingresar al sistema nuevamente.");
 										} else {
-											JOptionPane.showMessageDialog(jFrame, "¡Este RUT ya pertenece a otro usuario!");
+											JOptionPane.showMessageDialog(jFrame, "ï¿½Este RUT ya pertenece a otro usuario!");
 										}
 									} else {
-										//If 6: Revisa si las contraseñas coinciden
+										//If 6: Revisa si las contraseï¿½as coinciden
 										if (!(String.valueOf(confirmPasswordField.getPassword())
 												.equals(String.valueOf(passwordField.getPassword())))) {
 											JFrame jFrame = new JFrame();
@@ -281,7 +282,7 @@ public class Register extends JFrame {
 
 											String[] auxEmail = textField_email.getText().split("@");
 											
-											//Ifs 7: Revisa si la casilla de Emails es válida
+											//Ifs 7: Revisa si la casilla de Emails es vï¿½lida
 											if (auxEmail.length != 2) {
 												JFrame jFrame = new JFrame();
 												jFrame.setAlwaysOnTop(true);
@@ -297,7 +298,7 @@ public class Register extends JFrame {
 												//Finalmente la cuenta es creada.
 												JFrame jFrame = new JFrame();
 												jFrame.setAlwaysOnTop(true);
-												JOptionPane.showMessageDialog(jFrame, "¡Cuenta creada exitosamente!");
+												JOptionPane.showMessageDialog(jFrame, "ï¿½Cuenta creada exitosamente!");
 												String user = textField_userName.getText();
 												String fullname = textField_fullName.getText();
 												String rut = textField_rut.getText();
@@ -307,6 +308,17 @@ public class Register extends JFrame {
 												String fullrut = rut + "-" + verificationNumber;
 												try {
 													insertUser(connection, fullrut, fullname, user, null, email, password);
+												} catch (SQLException e1) {
+													e1.printStackTrace();
+												}
+												int id = 0;
+												try {
+													id = countCartID(connection);
+												} catch (SQLException e2) {
+													e2.printStackTrace();
+												}
+												try {
+													insertCart(connection, id  + 1, fullrut);
 												} catch (SQLException e1) {
 													e1.printStackTrace();
 												}
@@ -379,5 +391,26 @@ public class Register extends JFrame {
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 		}
+	}
+	
+	public int countCartID(SQL_Manager connection) throws SQLException {
+
+		String sql = "select id from cart order by id desc limit 1";
+		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGï¿½N PRODUCTO
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		rs.next();
+		int id = rs.getInt("id");
+		return id;
+	}
+	
+	public void insertCart(SQL_Manager  connection, int id, String user_rut) throws SQLException {
+		
+		String sql = "insert into cart(id, user_rut) values(?,?)";
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, id);
+		st.setString(2, user_rut);
+
+		st.executeUpdate();				
 	}
 }

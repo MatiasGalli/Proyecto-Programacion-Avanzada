@@ -187,28 +187,30 @@ public class AdminMenuProductsUpload extends JFrame {
 							String description = textField_description.getText();
 							price = Float.parseFloat(textField_price.getText());
 							String category = (String) comboBox_category.getSelectedItem();
-							String categoryID;
+							int categoryID = 0;
 							try {
 								String sql = "select id from category where name = ?";
 								PreparedStatement st;
 								st = connection.getConnection().prepareStatement(sql);
 								st.setString(1, category);
 								ResultSet rs = st.executeQuery();
-								rs.next();
-								categoryID = rs.getString(1);
+								if (rs.next()) {
+									categoryID = rs.getInt(1);
+								}
+								
 							} catch (SQLException e1) {
-								categoryID = null;
+								categoryID = 0;
 							}
 
-							String id = "-1";
+							int id = 0;
 							try {
 								id = countProductsID(connection);
 							} catch (SQLException e2) {
 								e2.printStackTrace();
 							}
 							try {
-								insertProduct(connection, String.valueOf(Integer.parseInt(id) + 1), name, description,
-										price, stock, categoryID);
+								System.out.println(id);
+								insertProduct(connection, (id + 1), name, description,price, stock, categoryID);
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
@@ -251,8 +253,8 @@ public class AdminMenuProductsUpload extends JFrame {
 		contentPane.add(textField_description);
 	}
 
-	public void insertProduct(SQL_Manager connection, String id, String name, String description, float price,
-			int stock, String category_id) throws SQLException {
+	public void insertProduct(SQL_Manager connection, int id, String name, String description, float price,
+			int stock, int category_id) throws SQLException {
 		try {
 			String sql;
 
@@ -260,12 +262,12 @@ public class AdminMenuProductsUpload extends JFrame {
 
 			PreparedStatement st = connection.getConnection().prepareStatement(sql);
 
-			st.setString(1, id);
+			st.setInt(1, id);
 			st.setString(2, name);
 			st.setString(3, description);
 			st.setFloat(4, price);
 			st.setInt(5, stock);
-			st.setString(6, category_id);
+			st.setInt(6, category_id);
 
 			st.executeUpdate();
 		} catch (SQLException ex) {
@@ -274,14 +276,16 @@ public class AdminMenuProductsUpload extends JFrame {
 
 	}
 
-	public String countProductsID(SQL_Manager connection) throws SQLException {
+	public int countProductsID(SQL_Manager connection) throws SQLException {
 
 		String sql = "select id from product order by id desc limit 1";
+		int id = 0;
 		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
-		rs.next();
-		String id = rs.getString("id");
+		if(rs.next()) {
+			id = rs.getInt("id");
+		}
 		return id;
 	}
 	

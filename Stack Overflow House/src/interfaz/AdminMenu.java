@@ -94,6 +94,10 @@ public class AdminMenu extends JFrame {
 		btn_productsEdit.setBackground(new Color(255, 255, 255));
 		btn_productsEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				AdminMenuProductsEdit v9 = new AdminMenuProductsEdit(connection);
+				v9.setLocationRelativeTo(null);
+				v9.setVisible(true);
+				dispose();
 			}
 		});
 		btn_productsEdit.setFont(new Font("Tahoma", Font.PLAIN, 14));

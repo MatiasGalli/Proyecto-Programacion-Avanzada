@@ -209,7 +209,6 @@ public class AdminMenuProductsUpload extends JFrame {
 								e2.printStackTrace();
 							}
 							try {
-								System.out.println(id);
 								insertProduct(connection, (id + 1), name, description,price, stock, categoryID);
 							} catch (SQLException e1) {
 								e1.printStackTrace();

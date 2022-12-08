@@ -322,6 +322,18 @@ public class Register extends JFrame {
 												} catch (SQLException e1) {
 													e1.printStackTrace();
 												}
+												int idH = 0;
+												try {
+													idH = countHistoryID(connection);
+												} catch (SQLException e2) {
+													e2.printStackTrace();
+												}
+												try {
+													insertHistoryID(connection, idH  + 1, fullrut);
+												} catch (SQLException e1) {
+													e1.printStackTrace();
+												}
+											
 												
 												//If 8. Verifica si el usuario no es admin.
 												if (!admin) {
@@ -396,7 +408,6 @@ public class Register extends JFrame {
 	public int countCartID(SQL_Manager connection) throws SQLException {
 
 		String sql = "select id from cart order by id desc limit 1";
-		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NING�N PRODUCTO
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
 		rs.next();
@@ -413,4 +424,25 @@ public class Register extends JFrame {
 
 		st.executeUpdate();				
 	}
+	
+	
+	public int countHistoryID(SQL_Manager connection) throws SQLException {
+		String sql = "select history_id from shopping_history order by history_id desc limit 1";
+		Statement st = connection.getConnection().createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		rs.next();
+		int id = rs.getInt("history_id");
+		return id;
+	}
+	
+	public void insertHistoryID(SQL_Manager connection,int history_id, String user_rut) throws SQLException {
+		String sql = "insert into shopping_history(history_id,user_rut) values(?,?)";
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, history_id);
+		st.setString(2, user_rut);
+		st.executeUpdate();
+		
+	}
 }
+
+

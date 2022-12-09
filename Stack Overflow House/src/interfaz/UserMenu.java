@@ -92,6 +92,11 @@ public class UserMenu extends JFrame {
 		contentPane.add(scrollPane_products);
 
 		JButton btn_userAccount = new JButton("CUENTA DE USUARIO");
+		btn_userAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		btn_userAccount.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_userAccount.setBackground(new Color(255, 255, 255));
 		btn_userAccount.setBounds(717, 10, 203, 26);
@@ -103,15 +108,29 @@ public class UserMenu extends JFrame {
 				int row = table_products.getSelectedRow();
 				if (row != -1) {
 					int product_stock = Integer.parseInt((String) table_products.getValueAt(row, 3));
+					int units = Integer.parseInt(textField_units.getText());
+					int product_id = Integer.parseInt((String) table_products.getValueAt(row, 0));
 					if (product_stock < Integer.parseInt(textField_units.getText())) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "No hay stock suficiente para las unidades indicadas.");
-					}
-					/*
-					 * try { //addCart(connection, product_stock); String prueba =""; } catch
-					 * (SQLException e1) { e1.printStackTrace(); }
-					 */
+					}else {
+						 try {
+							 int cart_id = selectCartId(connection,user);
+							 boolean exist = productExists(connection,cart_id,product_id);
+							 if (exist) {
+								 updateProduct(connection, cart_id, product_id,units);
+							 }else {
+								 addProduct(connection, cart_id, product_id,units);
+							 }
+							 substractStock(connection, units,product_id);
+							 JFrame jFrame = new JFrame();
+							 jFrame.setAlwaysOnTop(true);
+							 JOptionPane.showMessageDialog(jFrame, "Producto añadido al carrito.");
+						 } catch (SQLException e1) { 
+							 e1.printStackTrace(); 
+						 }
+					} 
 				} else {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
@@ -132,10 +151,25 @@ public class UserMenu extends JFrame {
 		JButton btn_seeCart = new JButton("Ver carrito");
 		btn_seeCart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				UserMenuCart v8 = new UserMenuCart(user, connection);
-				v8.setLocationRelativeTo(null);
-				v8.setVisible(true);
-				dispose();
+				int cart_id = -1;
+				boolean exist = false;
+				try {
+					cart_id = selectCartId(connection,user);
+					exist = productInCart(connection,cart_id);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				if (exist) {
+					UserMenuCart v8 = new UserMenuCart(user, connection);
+					v8.setLocationRelativeTo(null);
+					v8.setVisible(true);
+					dispose();
+				}else {
+					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
+					JOptionPane.showMessageDialog(jFrame, "No hay productos en el carrito.");
+				}
+				
 			}
 		});
 		btn_seeCart.setFont(new Font("Tahoma", Font.PLAIN, 22));
@@ -639,14 +673,26 @@ public class UserMenu extends JFrame {
 		PreparedStatement st = connection.getConnection().prepareStatement(sql);
 		st.setInt(1, product_id);
 		ResultSet rs = st.executeQuery();
-		connection.getConnection().prepareStatement(sql);
 		rs.next();
 		String description = rs.getString("description");
 
 		textField_description.setText(description);
 
 	}
+	
+	
+	public int selectCartId(SQL_Manager connection, String username) throws SQLException {
+		int cart_id = -1;
+		String sql = "select id from cart where cart.user_rut = (select rut from users where username = ?)";
 
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, username);
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		cart_id = rs.getInt("id");
+		return cart_id;
+	}
+	
 	public void addProduct(SQL_Manager connection, int cart_id, int product_id, int amount) throws SQLException {
 
 		String sql = "Insert into product_cart(cart_id, product_id, amount) values (?,?,?)";
@@ -656,6 +702,55 @@ public class UserMenu extends JFrame {
 		st.setInt(2, product_id);
 		st.setInt(3, amount);
 		st.executeUpdate();
+	}
+	
+	public void substractStock(SQL_Manager connection, int amount, int product_id) throws SQLException {
 
+		String sql = "update product set stock = stock - ? where id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, amount);
+		st.setInt(2, product_id);
+		st.executeUpdate();
+	}
+	
+	public boolean productExists(SQL_Manager connection, int cart_id, int product_id) throws SQLException {
+
+		boolean exist = false;
+		String sql = "select product_id from product_cart where product_id = ? and cart_id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, product_id);
+		st.setInt(2, cart_id);
+		ResultSet rs = st.executeQuery();
+		if(rs.next()) {
+			exist = true;
+		}
+		return exist;
+	}
+	
+	public void updateProduct(SQL_Manager connection, int cart_id, int product_id, int amount) throws SQLException {
+
+		String sql = "update product_cart set amount = amount + ? where cart_id = ? and product_id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, amount);
+		st.setInt(2, cart_id);
+		st.setInt(3, product_id);
+		st.executeUpdate();
+	}
+	
+	public boolean productInCart(SQL_Manager connection, int cart_id) throws SQLException {
+
+		boolean exist = false;
+		String sql = "select product_id from product_cart where cart_id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, cart_id);
+		ResultSet rs = st.executeQuery();
+		if(rs.next()) {
+			exist = true;
+		}
+		return exist;
 	}
 }

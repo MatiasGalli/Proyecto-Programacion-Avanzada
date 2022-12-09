@@ -40,7 +40,7 @@ public class AdminMenuUsersEdit extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuUsersEdit frame = new AdminMenuUsersEdit(null);
+					AdminMenuUsersEdit frame = new AdminMenuUsersEdit("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,7 +53,7 @@ public class AdminMenuUsersEdit extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public AdminMenuUsersEdit(SQL_Manager connection) {
+	public AdminMenuUsersEdit(String rut, SQL_Manager connection) {
 		setBackground(new Color(255, 250, 205));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AdminMenuUsersEdit.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Editar Usuarios");
@@ -73,7 +73,7 @@ public class AdminMenuUsersEdit extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut, connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();
@@ -250,11 +250,6 @@ public class AdminMenuUsersEdit extends JFrame {
 		JFrame jFrame = new JFrame();
 		jFrame.setAlwaysOnTop(true);
 		JOptionPane.showMessageDialog(jFrame,"Usuario actualizado.");
-		
-		AdminMenu v4 = new AdminMenu(connection);
-		v4.setLocationRelativeTo(null);
-		v4.setVisible(true);
-		dispose();
 
 	}
 }

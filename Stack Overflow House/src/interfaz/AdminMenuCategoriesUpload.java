@@ -35,7 +35,7 @@ public class AdminMenuCategoriesUpload extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuCategoriesUpload frame = new AdminMenuCategoriesUpload(null);
+					AdminMenuCategoriesUpload frame = new AdminMenuCategoriesUpload("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,8 +46,9 @@ public class AdminMenuCategoriesUpload extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param rut 
 	 */
-	public AdminMenuCategoriesUpload(SQL_Manager connection) {
+	public AdminMenuCategoriesUpload(String rut, SQL_Manager connection) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/assets/SOH_logo.png")));
 		setAlwaysOnTop(true);
 		setTitle("Subir Categoría");
@@ -90,7 +91,7 @@ public class AdminMenuCategoriesUpload extends JFrame {
 					}
 					String name = textField_name.getText();
 					try {
-						insertCategories(connection, (id + 1), name);
+						insertCategories(rut,connection, (id + 1), name);
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -110,7 +111,7 @@ public class AdminMenuCategoriesUpload extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut,connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();
@@ -123,7 +124,7 @@ public class AdminMenuCategoriesUpload extends JFrame {
 		contentPane.add(btn_back);
 	}
 
-	public void insertCategories(SQL_Manager connection, int id, String name) throws SQLException {
+	public void insertCategories(String rut, SQL_Manager connection, int id, String name) throws SQLException {
 		String categoryName;
 		String sql = "select name from category where name = ?";
 		PreparedStatement st;
@@ -146,7 +147,7 @@ public class AdminMenuCategoriesUpload extends JFrame {
 			jFrame.setAlwaysOnTop(true);
 			JOptionPane.showMessageDialog(jFrame, "¡Categoría creada exitosamente!");
 			
-			AdminMenu v4 = new AdminMenu(connection);
+			AdminMenu v4 = new AdminMenu(rut,connection);
 			v4.setLocationRelativeTo(null);
 			v4.setVisible(true);
 			dispose();

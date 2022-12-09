@@ -40,7 +40,7 @@ public class AdminMenuProductsUpload extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuProductsUpload frame = new AdminMenuProductsUpload(null);
+					AdminMenuProductsUpload frame = new AdminMenuProductsUpload("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,9 +51,10 @@ public class AdminMenuProductsUpload extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param rut 
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public AdminMenuProductsUpload(SQL_Manager connection) {
+	public AdminMenuProductsUpload(String rut, SQL_Manager connection) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/assets/SOH_logo.png")));
 		setAlwaysOnTop(true);
 		setTitle("Subir Producto");
@@ -202,7 +203,7 @@ public class AdminMenuProductsUpload extends JFrame {
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
-							AdminMenu v4 = new AdminMenu(connection);
+							AdminMenu v4 = new AdminMenu(rut, connection);
 							v4.setLocationRelativeTo(null);
 							v4.setVisible(true);
 							dispose();
@@ -243,7 +244,7 @@ public class AdminMenuProductsUpload extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut,connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();

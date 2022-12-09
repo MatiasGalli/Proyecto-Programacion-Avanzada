@@ -42,7 +42,7 @@ public class Register extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Register frame = new Register(false, null);
+					Register frame = new Register("",false, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +54,7 @@ public class Register extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Register(boolean admin, SQL_Manager connection) {
+	public Register(String rutAdmin, boolean admin, SQL_Manager connection) {
 		char[] DV = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'k', };
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/assets/SOH_logo.png")));
 		setAlwaysOnTop(true);
@@ -381,11 +381,7 @@ public class Register extends JFrame {
 					v1.setVisible(true);
 					dispose();
 				}else {
-					JFrame jFrame = new JFrame();
-					jFrame.setAlwaysOnTop(true);
-					JOptionPane.showMessageDialog(jFrame,
-							"ADMIN, vuelve a entrar");
-					Login v4 = new Login(connection);
+					AdminMenu v4 = new AdminMenu(rutAdmin, connection);
 					v4.setLocationRelativeTo(null);
 					v4.setVisible(true);
 					dispose();

@@ -88,8 +88,7 @@ public class Login extends JFrame {
 		btn_register.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btn_register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean admin = false;
-				Register v2 = new Register(admin, connection);
+				Register v2 = new Register("",false, connection);
 				v2.setLocationRelativeTo(null);
 				v2.setVisible(true);
 				dispose();

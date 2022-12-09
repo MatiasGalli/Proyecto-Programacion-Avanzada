@@ -81,7 +81,7 @@ public class AdminMenu extends JFrame {
 		JButton btn_productsUpload = new JButton("SUBIR");
 		btn_productsUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuProductsUpload v5 = new AdminMenuProductsUpload(connection);
+				AdminMenuProductsUpload v5 = new AdminMenuProductsUpload(rut,connection);
 				v5.setLocationRelativeTo(null);
 				v5.setVisible(true);
 				dispose();
@@ -96,7 +96,7 @@ public class AdminMenu extends JFrame {
 		btn_productsEdit.setBackground(new Color(255, 255, 255));
 		btn_productsEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuProductsEdit v9 = new AdminMenuProductsEdit(connection);
+				AdminMenuProductsEdit v9 = new AdminMenuProductsEdit(rut,connection);
 				v9.setLocationRelativeTo(null);
 				v9.setVisible(true);
 				dispose();
@@ -109,7 +109,7 @@ public class AdminMenu extends JFrame {
 		JButton btn_productsDelete = new JButton("ELIMINAR");
 		btn_productsDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuProductsDelete v6 = new AdminMenuProductsDelete(connection);
+				AdminMenuProductsDelete v6 = new AdminMenuProductsDelete(rut,connection);
 				v6.setLocationRelativeTo(null);
 				v6.setVisible(true);
 				dispose();
@@ -137,7 +137,7 @@ public class AdminMenu extends JFrame {
 		JButton btn_categoriesCreate = new JButton("SUBIR");
 		btn_categoriesCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuCategoriesUpload v6 = new AdminMenuCategoriesUpload(connection);
+				AdminMenuCategoriesUpload v6 = new AdminMenuCategoriesUpload(rut,connection);
 				v6.setLocationRelativeTo(null);
 				v6.setVisible(true);
 				dispose();
@@ -151,7 +151,7 @@ public class AdminMenu extends JFrame {
 		JButton btn_categoriesEdit = new JButton("EDITAR");
 		btn_categoriesEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuCategoriesEdit v10 = new AdminMenuCategoriesEdit(connection);
+				AdminMenuCategoriesEdit v10 = new AdminMenuCategoriesEdit(rut,connection);
 				v10.setLocationRelativeTo(null);
 				v10.setVisible(true);
 				dispose();
@@ -165,7 +165,7 @@ public class AdminMenu extends JFrame {
 		JButton btn_categoriesDelete = new JButton("ELIMINAR");
 		btn_categoriesDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuCategoriesDelete v7 = new AdminMenuCategoriesDelete(connection);
+				AdminMenuCategoriesDelete v7 = new AdminMenuCategoriesDelete(rut,connection);
 				v7.setLocationRelativeTo(null);
 				v7.setVisible(true);
 				dispose();
@@ -194,7 +194,7 @@ public class AdminMenu extends JFrame {
 		btn_usersAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean admin = true;
-				Register v2 = new Register(admin, connection);
+				Register v2 = new Register(rut,admin, connection);
 				v2.setLocationRelativeTo(null);
 				v2.setVisible(true);
 				dispose();
@@ -208,7 +208,7 @@ public class AdminMenu extends JFrame {
 		JButton btn_usersEditInfo = new JButton("EDITAR");
 		btn_usersEditInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuUsersEdit v11 = new AdminMenuUsersEdit(connection);
+				AdminMenuUsersEdit v11 = new AdminMenuUsersEdit(rut,connection);
 				v11.setLocationRelativeTo(null);
 				v11.setVisible(true);
 				dispose();

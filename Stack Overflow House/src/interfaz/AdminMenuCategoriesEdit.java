@@ -39,7 +39,7 @@ public class AdminMenuCategoriesEdit extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuCategoriesEdit frame = new AdminMenuCategoriesEdit(null);
+					AdminMenuCategoriesEdit frame = new AdminMenuCategoriesEdit("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,9 +50,10 @@ public class AdminMenuCategoriesEdit extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param rut 
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public AdminMenuCategoriesEdit(SQL_Manager connection) {
+	public AdminMenuCategoriesEdit(String rut, SQL_Manager connection) {
 		setBackground(new Color(255, 250, 205));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AdminMenuCategoriesEdit.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Editar Categor\u00EDa");
@@ -72,7 +73,7 @@ public class AdminMenuCategoriesEdit extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut,connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();
@@ -109,7 +110,7 @@ public class AdminMenuCategoriesEdit extends JFrame {
 				String category_name = (String) comboBox_category.getSelectedItem();
 				String name = textField_name.getText();
 				try {
-					editCategory(connection,category_name, name);
+					editCategory(rut, connection,category_name, name);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -164,7 +165,7 @@ public class AdminMenuCategoriesEdit extends JFrame {
 	}
 	
 	
-	public void editCategory(SQL_Manager connection,String category_name, String newName) throws SQLException {
+	public void editCategory(String rut, SQL_Manager connection,String category_name, String newName) throws SQLException {
 		String sql = "select id from category where name = ?";
 		PreparedStatement st;
 		ResultSet rs;
@@ -186,7 +187,7 @@ public class AdminMenuCategoriesEdit extends JFrame {
 		jFrame.setAlwaysOnTop(true);
 		JOptionPane.showMessageDialog(jFrame,"Categoría actualizada.");
 		
-		AdminMenu v4 = new AdminMenu(connection);
+		AdminMenu v4 = new AdminMenu(rut,connection);
 		v4.setLocationRelativeTo(null);
 		v4.setVisible(true);
 		dispose();

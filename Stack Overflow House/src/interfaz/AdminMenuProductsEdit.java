@@ -42,7 +42,7 @@ public class AdminMenuProductsEdit extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuProductsEdit frame = new AdminMenuProductsEdit(null);
+					AdminMenuProductsEdit frame = new AdminMenuProductsEdit("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,9 +53,10 @@ public class AdminMenuProductsEdit extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param rut 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public AdminMenuProductsEdit(SQL_Manager connection) {
+	public AdminMenuProductsEdit(String rut, SQL_Manager connection) {
 		setBackground(new Color(255, 250, 205));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AdminMenuProductsEdit.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Editar Productos\r\n");
@@ -70,7 +71,7 @@ public class AdminMenuProductsEdit extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut,connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();
@@ -185,7 +186,7 @@ public class AdminMenuProductsEdit extends JFrame {
 				String description = (String) textField_description.getText();
 				
 				try {
-					editProduct(connection,product_name,name,price,stock,description);
+					editProduct(rut,connection,product_name,name,price,stock,description);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -252,7 +253,7 @@ public class AdminMenuProductsEdit extends JFrame {
 		
 	}
 	
-	public void editProduct(SQL_Manager connection,String product_name,String name,float price, int stock, String description) throws SQLException {
+	public void editProduct(String rut, SQL_Manager connection,String product_name,String name,float price, int stock, String description) throws SQLException {
 		String sql = "select id from product where name = ?";
 		PreparedStatement st;
 		ResultSet rs;
@@ -277,7 +278,7 @@ public class AdminMenuProductsEdit extends JFrame {
 		jFrame.setAlwaysOnTop(true);
 		JOptionPane.showMessageDialog(jFrame,"Producto actualizado.");
 		
-		AdminMenu v4 = new AdminMenu(connection);
+		AdminMenu v4 = new AdminMenu(rut,connection);
 		v4.setLocationRelativeTo(null);
 		v4.setVisible(true);
 		dispose();

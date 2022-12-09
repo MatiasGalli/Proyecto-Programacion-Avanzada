@@ -35,7 +35,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuCategoriesDelete frame = new AdminMenuCategoriesDelete(null);
+					AdminMenuCategoriesDelete frame = new AdminMenuCategoriesDelete("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,7 +48,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public AdminMenuCategoriesDelete(SQL_Manager connection) {
+	public AdminMenuCategoriesDelete(String rut, SQL_Manager connection) {
 		setBackground(new Color(255, 250, 205));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AdminMenuCategoriesDelete.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Eliminar Categor\u00EDa");
@@ -68,7 +68,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut, connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();
@@ -104,7 +104,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String name = (String) comboBox_category.getSelectedItem();
 				try {
-					deleteCategory(connection,name);
+					deleteCategory(rut,connection,name);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -126,7 +126,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 		contentPane.add(lbl_note);
 	}
 	
-	public void deleteCategory(SQL_Manager connection, String name) throws SQLException {
+	public void deleteCategory(String rutAdmin, SQL_Manager connection, String name) throws SQLException {
 		boolean error = false;
 		String sql = "delete from category where name = ?";
 		PreparedStatement st = connection.getConnection().prepareStatement(sql);
@@ -144,7 +144,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 			jFrame.setAlwaysOnTop(true);
 			JOptionPane.showMessageDialog(jFrame,"Categoría eliminada");
 
-			AdminMenu v4 = new AdminMenu(connection);
+			AdminMenu v4 = new AdminMenu(rutAdmin, connection);
 			v4.setLocationRelativeTo(null);
 			v4.setVisible(true);
 			dispose();

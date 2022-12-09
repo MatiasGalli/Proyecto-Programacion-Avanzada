@@ -39,7 +39,7 @@ public class AdminMenuProductsDelete extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuProductsDelete frame = new AdminMenuProductsDelete(null);
+					AdminMenuProductsDelete frame = new AdminMenuProductsDelete("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,8 +50,9 @@ public class AdminMenuProductsDelete extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param rut 
 	 */
-	public AdminMenuProductsDelete(SQL_Manager connection) {
+	public AdminMenuProductsDelete(String rut, SQL_Manager connection) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AdminMenuProductsDelete.class.getResource("/assets/SOH_logo.png")));
 		setBackground(new Color(255, 250, 205));
 		setTitle("Eliminar Producto");
@@ -73,7 +74,7 @@ public class AdminMenuProductsDelete extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut,connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();

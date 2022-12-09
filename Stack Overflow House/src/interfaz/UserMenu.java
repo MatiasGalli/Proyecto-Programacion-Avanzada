@@ -510,7 +510,7 @@ public class UserMenu extends JFrame {
 			String sql;
 			PreparedStatement st;
 			ResultSet rs;
-			sql = "Select id from category where name = ? and stock <> 0;";
+			sql = "Select id from category where name = ?;";
 			st = connection.getConnection().prepareStatement(sql);
 			st.setString(1, search);
 			rs = st.executeQuery();

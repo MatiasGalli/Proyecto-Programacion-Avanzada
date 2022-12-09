@@ -46,7 +46,7 @@ public class AdminMenu extends JFrame {
 		setResizable(false);
 		setTitle("Menu de administrador");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 530, 400);
+		setBounds(100, 100, 820, 540);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 250, 205));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -55,25 +55,26 @@ public class AdminMenu extends JFrame {
 		
 		JLabel lbl_SOHLogo = new JLabel("Logo");
 		lbl_SOHLogo.setIcon(new ImageIcon(AdminMenu.class.getResource("/assets/SOH_logoMin.png")));
-		lbl_SOHLogo.setBounds(10, 327, 36, 26);
+		lbl_SOHLogo.setBounds(10, 467, 36, 26);
 		contentPane.add(lbl_SOHLogo);
 		
 		JLabel lbl_welcome = new JLabel("Te damos la bienvenida al men\u00FA de administrador.");
-		lbl_welcome.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lbl_welcome.setBounds(25, 30, 481, 13);
+		lbl_welcome.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_welcome.setBounds(88, 34, 481, 26);
 		contentPane.add(lbl_welcome);
 		
 		JPanel panel_products = new JPanel();
 		panel_products.setBorder(new LineBorder(new Color(255, 215, 0), 2, true));
 		panel_products.setBackground(new Color(240, 230, 140));
-		panel_products.setBounds(36, 70, 120, 247);
+		panel_products.setBounds(88, 70, 180, 386);
 		contentPane.add(panel_products);
 		panel_products.setLayout(null);
 		
 		JLabel lbl_products = new JLabel("  PRODUCTOS");
+		lbl_products.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lbl_products.setForeground(new Color(65, 105, 225));
 		lbl_products.setBackground(new Color(65, 105, 225));
-		lbl_products.setBounds(10, 224, 100, 13);
+		lbl_products.setBounds(37, 363, 143, 13);
 		panel_products.add(lbl_products);
 		
 		JButton btn_productsUpload = new JButton("SUBIR");
@@ -86,8 +87,8 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_productsUpload.setBackground(new Color(255, 255, 255));
-		btn_productsUpload.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_productsUpload.setBounds(10, 45, 100, 21);
+		btn_productsUpload.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_productsUpload.setBounds(10, 45, 160, 40);
 		panel_products.add(btn_productsUpload);
 		
 		JButton btn_productsEdit = new JButton("EDITAR");
@@ -100,8 +101,8 @@ public class AdminMenu extends JFrame {
 				dispose();
 			}
 		});
-		btn_productsEdit.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_productsEdit.setBounds(10, 107, 100, 21);
+		btn_productsEdit.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_productsEdit.setBounds(10, 168, 160, 40);
 		panel_products.add(btn_productsEdit);
 		
 		JButton btn_productsDelete = new JButton("ELIMINAR");
@@ -114,21 +115,22 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_productsDelete.setBackground(new Color(255, 255, 255));
-		btn_productsDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_productsDelete.setBounds(10, 165, 100, 21);
+		btn_productsDelete.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_productsDelete.setBounds(10, 287, 160, 40);
 		panel_products.add(btn_productsDelete);
 		
 		JPanel panel_categories = new JPanel();
 		panel_categories.setBorder(new LineBorder(new Color(255, 215, 0), 2, true));
 		panel_categories.setBackground(new Color(240, 230, 140));
-		panel_categories.setBounds(203, 70, 120, 247);
+		panel_categories.setBounds(327, 70, 180, 386);
 		contentPane.add(panel_categories);
 		panel_categories.setLayout(null);
 		
 		JLabel lbl_categories = new JLabel("  CATEGOR\u00CDAS");
+		lbl_categories.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lbl_categories.setForeground(new Color(65, 105, 225));
 		lbl_categories.setBackground(new Color(65, 105, 225));
-		lbl_categories.setBounds(10, 224, 100, 13);
+		lbl_categories.setBounds(35, 363, 135, 13);
 		panel_categories.add(lbl_categories);
 		
 		JButton btn_categoriesCreate = new JButton("SUBIR");
@@ -141,21 +143,9 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_categoriesCreate.setBackground(new Color(255, 255, 255));
-		btn_categoriesCreate.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_categoriesCreate.setBounds(10, 45, 100, 21);
+		btn_categoriesCreate.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_categoriesCreate.setBounds(10, 45, 160, 40);
 		panel_categories.add(btn_categoriesCreate);
-		
-		JButton btn_back = new JButton("<-\r\n-");
-		btn_back.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Login v1 = new Login(connection);
-				v1.setLocationRelativeTo(null);
-				v1.setVisible(true);
-				dispose();
-			}
-		});
-		btn_back.setBounds(0, 0, 55, 21);
-		contentPane.add(btn_back);
 		
 		JButton btn_categoriesEdit = new JButton("EDITAR");
 		btn_categoriesEdit.addActionListener(new ActionListener() {
@@ -167,8 +157,8 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_categoriesEdit.setBackground(new Color(255, 255, 255));
-		btn_categoriesEdit.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_categoriesEdit.setBounds(10, 108, 100, 21);
+		btn_categoriesEdit.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_categoriesEdit.setBounds(10, 168, 160, 40);
 		panel_categories.add(btn_categoriesEdit);
 		
 		JButton btn_categoriesDelete = new JButton("ELIMINAR");
@@ -181,21 +171,22 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_categoriesDelete.setBackground(new Color(255, 255, 255));
-		btn_categoriesDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_categoriesDelete.setBounds(10, 165, 100, 21);
+		btn_categoriesDelete.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_categoriesDelete.setBounds(10, 288, 160, 40);
 		panel_categories.add(btn_categoriesDelete);
 		
 		JPanel panel_users = new JPanel();
 		panel_users.setBorder(new LineBorder(new Color(255, 215, 0), 2, true));
 		panel_users.setBackground(new Color(240, 230, 140));
-		panel_users.setBounds(367, 70, 120, 247);
+		panel_users.setBounds(560, 70, 180, 386);
 		contentPane.add(panel_users);
 		panel_users.setLayout(null);
 		
 		JLabel lbl_users = new JLabel("      USUARIOS");
+		lbl_users.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lbl_users.setForeground(new Color(65, 105, 225));
 		lbl_users.setBackground(new Color(65, 105, 225));
-		lbl_users.setBounds(10, 224, 100, 13);
+		lbl_users.setBounds(24, 363, 146, 13);
 		panel_users.add(lbl_users);
 		
 		JButton btn_usersAdd = new JButton("AGREGAR");
@@ -209,8 +200,8 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_usersAdd.setBackground(new Color(255, 255, 255));
-		btn_usersAdd.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_usersAdd.setBounds(10, 45, 100, 21);
+		btn_usersAdd.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_usersAdd.setBounds(10, 45, 160, 40);
 		panel_users.add(btn_usersAdd);
 		
 		JButton btn_usersEditInfo = new JButton("EDITAR");
@@ -223,8 +214,8 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_usersEditInfo.setBackground(new Color(255, 255, 255));
-		btn_usersEditInfo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_usersEditInfo.setBounds(10, 108, 100, 21);
+		btn_usersEditInfo.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_usersEditInfo.setBounds(10, 172, 160, 40);
 		panel_users.add(btn_usersEditInfo);
 		
 		JButton btn_usersBan = new JButton("BLOQUEAR");
@@ -237,14 +228,29 @@ public class AdminMenu extends JFrame {
 			}
 		});
 		btn_usersBan.setBackground(new Color(255, 255, 255));
-		btn_usersBan.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btn_usersBan.setBounds(10, 164, 100, 21);
+		btn_usersBan.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		btn_usersBan.setBounds(10, 292, 160, 40);
 		panel_users.add(btn_usersBan);
 		
 		JButton btn_adminAccount = new JButton("CUENTA DE ADMINISTRADOR");
-		btn_adminAccount.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btn_adminAccount.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_adminAccount.setBackground(Color.WHITE);
-		btn_adminAccount.setBounds(316, 25, 190, 25);
+		btn_adminAccount.setBounds(525, 10, 271, 26);
 		contentPane.add(btn_adminAccount);
+		
+		JButton btn_back = new JButton();
+		btn_back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login v1 = new Login(connection);
+				v1.setLocationRelativeTo(null);
+				v1.setVisible(true);
+				dispose();
+			}
+		});
+		btn_back.setIcon(new ImageIcon(AdminMenu.class.getResource("/assets/back.png")));
+		btn_back.setBorder(null);
+		btn_back.setBackground((Color) null);
+		btn_back.setBounds(10, 10, 30, 30);
+		contentPane.add(btn_back);
 	}
 }

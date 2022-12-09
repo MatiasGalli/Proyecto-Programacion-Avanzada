@@ -59,71 +59,60 @@ public class AdminMenuProductsUpload extends JFrame {
 		setTitle("Subir Producto");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 350, 300);
+		setBounds(100, 100, 640, 360);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 250, 205));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JButton btn_back = new JButton("<-\r\n-");
-		btn_back.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
-				v4.setLocationRelativeTo(null);
-				v4.setVisible(true);
-				dispose();
-			}
-		});
-		btn_back.setBounds(0, 0, 55, 21);
-		contentPane.add(btn_back);
-
 		JLabel lbl_name = new JLabel("Nombre del producto");
-		lbl_name.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		lbl_name.setBounds(35, 25, 100, 15);
+		lbl_name.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_name.setBounds(35, 49, 170, 15);
 		contentPane.add(lbl_name);
 
 		JLabel lbl_price = new JLabel("Precio");
-		lbl_price.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		lbl_price.setBounds(185, 25, 100, 15);
+		lbl_price.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_price.setBounds(431, 49, 100, 15);
 		contentPane.add(lbl_price);
 
 		JLabel lbl_stock = new JLabel("Stock inicial");
-		lbl_stock.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		lbl_stock.setBounds(35, 80, 100, 15);
+		lbl_stock.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_stock.setBounds(431, 116, 100, 15);
 		contentPane.add(lbl_stock);
 
 		JLabel lbl_category = new JLabel("Categor\u00EDa");
-		lbl_category.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		lbl_category.setBounds(120, 80, 100, 15);
+		lbl_category.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_category.setBounds(35, 110, 100, 26);
 		contentPane.add(lbl_category);
 
 		JLabel lbl_description = new JLabel("Descripci\u00F3n");
-		lbl_description.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		lbl_description.setBounds(35, 141, 100, 15);
+		lbl_description.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_description.setBounds(35, 190, 100, 15);
 		contentPane.add(lbl_description);
 
 		textField_name = new JTextField();
-		textField_name.setBounds(35, 41, 120, 19);
+		textField_name.setBounds(35, 74, 355, 26);
 		contentPane.add(textField_name);
 		textField_name.setColumns(10);
 
 		textField_price = new JTextField();
 		textField_price.setColumns(10);
-		textField_price.setBounds(185, 41, 120, 19);
+		textField_price.setBounds(430, 74, 150, 26);
 		contentPane.add(textField_price);
 
 		textField_stock = new JTextField();
 		textField_stock.setColumns(10);
-		textField_stock.setBounds(35, 97, 50, 19);
+		textField_stock.setBounds(431, 138, 149, 26);
 		contentPane.add(textField_stock);
 
 		JLabel lbl_SOHLogo = new JLabel("Logo");
 		lbl_SOHLogo.setIcon(new ImageIcon(Register.class.getResource("/assets/SOH_logoMin.png")));
-		lbl_SOHLogo.setBounds(10, 227, 36, 26);
+		lbl_SOHLogo.setBounds(10, 287, 36, 26);
 		contentPane.add(lbl_SOHLogo);
 
 		JComboBox comboBox_category = new JComboBox();
+		comboBox_category.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		int cant = 10;
 		try {
 			cant = countCategories(connection);
@@ -138,7 +127,7 @@ public class AdminMenuProductsUpload extends JFrame {
 			e3.printStackTrace();
 		}
 		comboBox_category.setModel(new DefaultComboBoxModel(values));
-		comboBox_category.setBounds(120, 96, 185, 21);
+		comboBox_category.setBounds(35, 137, 355, 26);
 		contentPane.add(comboBox_category);
 
 		JButton btn_upload = new JButton("Crear");
@@ -241,15 +230,30 @@ public class AdminMenuProductsUpload extends JFrame {
 			}
 
 		});
-		btn_upload.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btn_upload.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_upload.setBackground(new Color(255, 255, 255));
-		btn_upload.setBounds(120, 230, 100, 21);
+		btn_upload.setBounds(290, 285, 88, 26);
 		contentPane.add(btn_upload);
 
 		textField_description = new JTextField();
 		textField_description.setColumns(10);
-		textField_description.setBounds(35, 166, 270, 40);
+		textField_description.setBounds(35, 215, 545, 52);
 		contentPane.add(textField_description);
+		
+		JButton btn_back = new JButton();
+		btn_back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenu v4 = new AdminMenu(connection);
+				v4.setLocationRelativeTo(null);
+				v4.setVisible(true);
+				dispose();
+			}
+		});
+		btn_back.setIcon(new ImageIcon(AdminMenuProductsUpload.class.getResource("/assets/back.png")));
+		btn_back.setBorder(null);
+		btn_back.setBackground((Color) null);
+		btn_back.setBounds(10, 10, 30, 30);
+		contentPane.add(btn_back);
 	}
 
 	public void insertProduct(SQL_Manager connection, int id, String name, String description, float price,

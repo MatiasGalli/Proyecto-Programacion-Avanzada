@@ -149,13 +149,13 @@ public class AdminMenuProductsEdit extends JFrame {
 		
 		textField_name = new JTextField();
 		textField_name.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField_name.setText("Nombre del producto");
+		textField_name.setText(null);
 		textField_name.setBounds(146, 177, 561, 26);
 		contentPane.add(textField_name);
 		textField_name.setColumns(10);
 		
 		textField_price = new JTextField();
-		textField_price.setText("0");
+		textField_price.setText(null);
 		textField_price.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textField_price.setColumns(10);
 		textField_price.setBounds(142, 231, 130, 26);
@@ -163,14 +163,14 @@ public class AdminMenuProductsEdit extends JFrame {
 		
 		textField_stock = new JTextField();
 		textField_stock.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField_stock.setText("0");
+		textField_stock.setText(null);
 		textField_stock.setColumns(10);
 		textField_stock.setBounds(427, 231, 101, 26);
 		contentPane.add(textField_stock);
 		
 		textField_description = new JTextField();
 		textField_description.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField_description.setText("Descripci\u00F3n del producto\r\n");
+		textField_description.setText(null);
 		textField_description.setColumns(10);
 		textField_description.setBounds(175, 282, 532, 26);
 		contentPane.add(textField_description);

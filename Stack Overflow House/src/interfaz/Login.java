@@ -165,7 +165,7 @@ public class Login extends JFrame {
 								v3.setVisible(true);
 								dispose();
 							} else {
-								AdminMenu v4 = new AdminMenu(connection);
+								AdminMenu v4 = new AdminMenu(rut, connection);
 								v4.setLocationRelativeTo(null);
 								v4.setVisible(true);
 								dispose();

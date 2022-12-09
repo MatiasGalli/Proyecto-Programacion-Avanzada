@@ -54,7 +54,7 @@ public class AdminMenuUsersBan extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenuUsersBan frame = new AdminMenuUsersBan(null);
+					AdminMenuUsersBan frame = new AdminMenuUsersBan("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -67,7 +67,7 @@ public class AdminMenuUsersBan extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public AdminMenuUsersBan(SQL_Manager connection) {
+	public AdminMenuUsersBan(String rut, SQL_Manager connection) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AdminMenuUsersBan.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Bloquear Usuario");
 		setResizable(false);
@@ -82,7 +82,7 @@ public class AdminMenuUsersBan extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenu v4 = new AdminMenu(connection);
+				AdminMenu v4 = new AdminMenu(rut, connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
 				dispose();

@@ -232,7 +232,7 @@ public class Register extends JFrame {
 									JOptionPane.showMessageDialog(jFrame, "El RUT ingresado no es v�lido.");
 								} else {
 									
-									//Corroboraci�n que el RUT no se halle la en la database.
+									//Corroborar que el RUT no se halle la en la database.
 									String rut_aux = null;
 									boolean banned = true;
 									try {
@@ -329,7 +329,7 @@ public class Register extends JFrame {
 													v3.setVisible(true);
 													dispose();
 												}else {
-													AdminMenu v4 = new AdminMenu(connection);
+													AdminMenu v4 = new AdminMenu(fullrut, connection);
 													v4.setLocationRelativeTo(null);
 													v4.setVisible(true);
 													dispose();
@@ -381,7 +381,11 @@ public class Register extends JFrame {
 					v1.setVisible(true);
 					dispose();
 				}else {
-					AdminMenu v4 = new AdminMenu(connection);
+					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
+					JOptionPane.showMessageDialog(jFrame,
+							"ADMIN, vuelve a entrar");
+					Login v4 = new Login(connection);
 					v4.setLocationRelativeTo(null);
 					v4.setVisible(true);
 					dispose();

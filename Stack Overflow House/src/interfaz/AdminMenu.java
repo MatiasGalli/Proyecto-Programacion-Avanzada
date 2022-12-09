@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -29,7 +30,7 @@ public class AdminMenu extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminMenu frame = new AdminMenu(null);
+					AdminMenu frame = new AdminMenu("",null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +42,7 @@ public class AdminMenu extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AdminMenu(SQL_Manager connection) {
+	public AdminMenu(String rut, SQL_Manager connection) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AdminMenu.class.getResource("/assets/SOH_logo.png")));
 		setResizable(false);
 		setTitle("Menu de administrador");
@@ -221,7 +222,7 @@ public class AdminMenu extends JFrame {
 		JButton btn_usersBan = new JButton("BLOQUEAR");
 		btn_usersBan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AdminMenuUsersBan v7 = new AdminMenuUsersBan(connection);
+				AdminMenuUsersBan v7 = new AdminMenuUsersBan(rut,connection);
 				v7.setLocationRelativeTo(null);
 				v7.setVisible(true);
 				dispose();
@@ -233,6 +234,14 @@ public class AdminMenu extends JFrame {
 		panel_users.add(btn_usersBan);
 		
 		JButton btn_adminAccount = new JButton("CUENTA DE ADMINISTRADOR");
+		btn_adminAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login v1 = new Login(connection);
+				v1.setLocationRelativeTo(null);
+				v1.setVisible(true);
+				dispose();
+			}
+		});
 		btn_adminAccount.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_adminAccount.setBackground(Color.WHITE);
 		btn_adminAccount.setBounds(525, 10, 271, 26);
@@ -241,10 +250,10 @@ public class AdminMenu extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login v1 = new Login(connection);
-				v1.setLocationRelativeTo(null);
-				v1.setVisible(true);
-				dispose();
+				JFrame jFrame = new JFrame();
+				jFrame.setAlwaysOnTop(true);
+				JOptionPane.showMessageDialog(jFrame,
+						"Administrador: ");
 			}
 		});
 		btn_back.setIcon(new ImageIcon(AdminMenu.class.getResource("/assets/back.png")));

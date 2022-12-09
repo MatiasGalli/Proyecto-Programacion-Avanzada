@@ -191,6 +191,20 @@ public class UserMenu extends JFrame {
 		btn_back.setBounds(0, 0, 55, 21);
 		contentPane.add(btn_back);
 		
+		JButton btn_seeCart = new JButton("Ver carrito");
+		btn_seeCart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				UserMenuCart v8 = new UserMenuCart(user,connection);
+				v8.setLocationRelativeTo(null);
+				v8.setVisible(true);
+				dispose();
+			}
+		});
+		btn_seeCart.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btn_seeCart.setBackground(Color.WHITE);
+		btn_seeCart.setBounds(546, 380, 130, 25);
+		contentPane.add(btn_seeCart);
+		
 	}
 	
 	public Object[][] getProducts(SQL_Manager connection, Object[][] values) {
@@ -211,7 +225,7 @@ public class UserMenu extends JFrame {
 				list[cant][1] = rs.getString("name");
 				list[cant][2] = "$" + rs.getString("price");
 				list[cant][3] = rs.getString("stock");
-				category = getCategories(connection,rs.getString("category_id"));
+				category = getCategories(connection,rs.getInt("category_id"));
 				list[cant][4] = category;
 				cant++;
 			}
@@ -235,12 +249,12 @@ public class UserMenu extends JFrame {
 		return "-1";
 	}
 	
-	public String getCategories(SQL_Manager connection, String id) throws SQLException {
+	public String getCategories(SQL_Manager connection, int id) throws SQLException {
 
 		String sql = "select name from category where id = ?";
 		PreparedStatement st;
 		st = connection.getConnection().prepareStatement(sql);
-		st.setString(1, id);
+		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();
 		rs.next();
 		String name = rs.getString(1);

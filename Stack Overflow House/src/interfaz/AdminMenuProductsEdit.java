@@ -15,11 +15,14 @@ import logica.SQL_Manager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -27,10 +30,10 @@ import javax.swing.JTextField;
 public class AdminMenuProductsEdit extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField textField_name;
+	private JTextField textField_price;
+	private JTextField textField_stock;
+	private JTextField textField_description;
 
 	/**
 	 * Launch the application.
@@ -109,71 +112,89 @@ public class AdminMenuProductsEdit extends JFrame {
 		contentPane.add(comboBox_products);
 		
 		JButton btn_seeData = new JButton("VER DATOS");
+		btn_seeData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String product_name = (String) comboBox_products.getSelectedItem();
+				try {
+					seeData(connection,product_name);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		btn_seeData.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_seeData.setBackground(Color.WHITE);
-		btn_seeData.setBounds(291, 86, 180, 26);
+		btn_seeData.setBounds(290, 109, 180, 26);
 		contentPane.add(btn_seeData);
 		
 		JLabel lbl_name = new JLabel("Nombre:");
 		lbl_name.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_name.setBounds(52, 144, 84, 26);
+		lbl_name.setBounds(52, 177, 84, 26);
 		contentPane.add(lbl_name);
 		
-		JLabel lbl_name_1 = new JLabel("Precio: $");
-		lbl_name_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_name_1.setBounds(52, 180, 93, 26);
-		contentPane.add(lbl_name_1);
+		JLabel lbl_price = new JLabel("Precio: $");
+		lbl_price.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lbl_price.setBounds(52, 231, 93, 26);
+		contentPane.add(lbl_price);
 		
-		JLabel lbl_name_1_1 = new JLabel("Stock:");
-		lbl_name_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_name_1_1.setBounds(364, 180, 69, 26);
-		contentPane.add(lbl_name_1_1);
+		JLabel lbl_stock = new JLabel("Stock:");
+		lbl_stock.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lbl_stock.setBounds(360, 231, 69, 26);
+		contentPane.add(lbl_stock);
 		
-		JLabel lbl_name_1_1_1 = new JLabel("Descripci\u00F3n:");
-		lbl_name_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_name_1_1_1.setBounds(52, 216, 118, 26);
-		contentPane.add(lbl_name_1_1_1);
+		JLabel lbl_description = new JLabel("Descripci\u00F3n:");
+		lbl_description.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lbl_description.setBounds(52, 282, 118, 26);
+		contentPane.add(lbl_description);
 		
-		JLabel lbl_name_1_1_1_1 = new JLabel("Categor\u00EDa:");
-		lbl_name_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_name_1_1_1_1.setBounds(190, 264, 118, 26);
-		contentPane.add(lbl_name_1_1_1_1);
+		textField_name = new JTextField();
+		textField_name.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textField_name.setText("Nombre del producto");
+		textField_name.setBounds(146, 177, 561, 26);
+		contentPane.add(textField_name);
+		textField_name.setColumns(10);
 		
-		textField = new JTextField();
-		textField.setBounds(146, 144, 561, 26);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		textField_price = new JTextField();
+		textField_price.setText("0");
+		textField_price.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textField_price.setColumns(10);
+		textField_price.setBounds(142, 231, 130, 26);
+		contentPane.add(textField_price);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(146, 180, 130, 26);
-		contentPane.add(textField_1);
+		textField_stock = new JTextField();
+		textField_stock.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textField_stock.setText("0");
+		textField_stock.setColumns(10);
+		textField_stock.setBounds(427, 231, 101, 26);
+		contentPane.add(textField_stock);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(427, 180, 101, 26);
-		contentPane.add(textField_2);
+		textField_description = new JTextField();
+		textField_description.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textField_description.setText("Descripci\u00F3n del producto\r\n");
+		textField_description.setColumns(10);
+		textField_description.setBounds(175, 282, 532, 26);
+		contentPane.add(textField_description);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(175, 216, 532, 26);
-		contentPane.add(textField_3);
-		
-		JComboBox comboBox_products_1 = new JComboBox();
-		comboBox_products_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		comboBox_products_1.setBounds(291, 266, 280, 26);
-		contentPane.add(comboBox_products_1);
-		
-		JLabel lbl_name_1_1_1_1_1 = new JLabel("Imagen:");
-		lbl_name_1_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_name_1_1_1_1_1.setBounds(77, 350, 93, 26);
-		contentPane.add(lbl_name_1_1_1_1_1);
-		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(AdminMenuProductsEdit.class.getResource("/assets/no_image.png")));
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(175, 300, 130, 130);
-		contentPane.add(lblNewLabel);
+		JButton btn_editProduct = new JButton("EDITAR PRODUCTO");
+		btn_editProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String product_name = (String) comboBox_products.getSelectedItem();
+				String name = textField_name.getText();
+				float price = Float.parseFloat(textField_price.getText());
+				int stock = Integer.parseInt(textField_stock.getText());
+				String description = (String) textField_description.getText();
+				
+				try {
+					editProduct(connection,product_name,name,price,stock,description);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btn_editProduct.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btn_editProduct.setBackground(Color.WHITE);
+		btn_editProduct.setBounds(265, 384, 227, 26);
+		contentPane.add(btn_editProduct);
 	}
 	
 	public int countProducts(SQL_Manager connection) throws SQLException {
@@ -190,7 +211,7 @@ public class AdminMenuProductsEdit extends JFrame {
 	public String[] getProducts(SQL_Manager connection, String[] list) throws SQLException {
 
 		String[] values = list;
-		String sql = "select name from product";
+		String sql = "select name from product order by name asc";
 		// VERIFICAR EL CASO DE QUE NO EXISTAN CATEGORIAS
 		Statement st = connection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(sql);
@@ -200,5 +221,66 @@ public class AdminMenuProductsEdit extends JFrame {
 			cant++;
 		}
 		return values;
+	}
+	
+	public void seeData(SQL_Manager connection, String product_name) throws SQLException {
+		String sql = "select id from product where name = ?";
+		PreparedStatement st;
+		ResultSet rs;
+		
+		st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, product_name);
+		rs = st.executeQuery();
+		rs.next();
+		int product_id = rs.getInt("id");
+		
+		
+		sql = "select price,stock,description from product where id = ?";
+		st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, product_id);
+		rs = st.executeQuery();
+		connection.getConnection().prepareStatement(sql);
+		rs.next();
+		float price = rs.getFloat("price");
+		int stock = rs.getInt("stock");
+		String description = rs.getString("description");
+		
+		textField_name.setText(product_name);
+		textField_price.setText(Float.toString(price));
+		textField_stock.setText(Integer.toString(stock));
+		textField_description.setText(description);
+		
+	}
+	
+	public void editProduct(SQL_Manager connection,String product_name,String name,float price, int stock, String description) throws SQLException {
+		String sql = "select id from product where name = ?";
+		PreparedStatement st;
+		ResultSet rs;
+		
+		st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, product_name);
+		rs = st.executeQuery();
+		rs.next();
+		int product_id = rs.getInt("id");
+		
+		sql = "update product set name = ?, price = ?, stock = ?, description = ? where id = ?";
+		
+		st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, name);
+		st.setFloat(2, price);
+		st.setInt(3, stock);
+		st.setString(4, description);
+		st.setInt(5, product_id);
+		st.executeUpdate();
+		
+		JFrame jFrame = new JFrame();
+		jFrame.setAlwaysOnTop(true);
+		JOptionPane.showMessageDialog(jFrame,"Producto actualizado.");
+		
+		AdminMenu v4 = new AdminMenu(connection);
+		v4.setLocationRelativeTo(null);
+		v4.setVisible(true);
+		dispose();
+
 	}
 }

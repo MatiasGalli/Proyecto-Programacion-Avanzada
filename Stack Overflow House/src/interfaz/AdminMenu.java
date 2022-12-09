@@ -158,6 +158,14 @@ public class AdminMenu extends JFrame {
 		contentPane.add(btn_back);
 		
 		JButton btn_categoriesEdit = new JButton("EDITAR");
+		btn_categoriesEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenuCategoriesEdit v10 = new AdminMenuCategoriesEdit(connection);
+				v10.setLocationRelativeTo(null);
+				v10.setVisible(true);
+				dispose();
+			}
+		});
 		btn_categoriesEdit.setBackground(new Color(255, 255, 255));
 		btn_categoriesEdit.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btn_categoriesEdit.setBounds(10, 108, 100, 21);
@@ -206,6 +214,14 @@ public class AdminMenu extends JFrame {
 		panel_users.add(btn_usersAdd);
 		
 		JButton btn_usersEditInfo = new JButton("EDITAR");
+		btn_usersEditInfo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenuUsersEdit v11 = new AdminMenuUsersEdit(connection);
+				v11.setLocationRelativeTo(null);
+				v11.setVisible(true);
+				dispose();
+			}
+		});
 		btn_usersEditInfo.setBackground(new Color(255, 255, 255));
 		btn_usersEditInfo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btn_usersEditInfo.setBounds(10, 108, 100, 21);

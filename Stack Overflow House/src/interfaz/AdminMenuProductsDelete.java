@@ -95,7 +95,7 @@ public class AdminMenuProductsDelete extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int row = table_products.getSelectedRow();
 				if (row != -1) {
-					String id = (String) table_products.getValueAt(row, 0);
+					int id = (int) table_products.getValueAt(row, 0);
 					try {
 						deleteProduct(connection,id);
 					} catch (SQLException e1) {
@@ -143,6 +143,7 @@ public class AdminMenuProductsDelete extends JFrame {
 				String sql, category;
 				PreparedStatement st;
 				ResultSet rs;
+				//EDITAR CONSULTA (INNER JOIN)
 				sql = "Select * from product order by id asc";
 				st = connection.getConnection().prepareStatement(sql);
 				rs = st.executeQuery();
@@ -161,7 +162,7 @@ public class AdminMenuProductsDelete extends JFrame {
 					row[1]=rs.getString("name");
 					row[2]= "$ " + rs.getString("price");
 					row[3]=rs.getString("stock");
-					category = getCategories(connection,rs.getString("category_id"));
+					category = getCategories(connection,rs.getInt("category_id"));
 					row[4]= category;
 					model.addRow(row);
 					
@@ -185,22 +186,22 @@ public class AdminMenuProductsDelete extends JFrame {
 			return null;
 		}
 		
-		public String getCategories(SQL_Manager connection, String id) throws SQLException {
+		public String getCategories(SQL_Manager connection, int id) throws SQLException {
 
 			String sql = "select name from category where id = ?";
 			PreparedStatement st;
 			st = connection.getConnection().prepareStatement(sql);
-			st.setString(1, id);
+			st.setInt(1, id);
 			ResultSet rs = st.executeQuery();
 			rs.next();
 			String name = rs.getString(1);
 			return name;
 		}
 		
-		public void deleteProduct(SQL_Manager connection, String id) throws SQLException {
+		public void deleteProduct(SQL_Manager connection, int id) throws SQLException {
 			String sql = "delete from product where id = ?";
 			PreparedStatement st = connection.getConnection().prepareStatement(sql);
-			st.setString(1, id);
+			st.setInt(1, id);
 			st.executeUpdate();
 			JFrame jFrame = new JFrame();
 			jFrame.setAlwaysOnTop(true);

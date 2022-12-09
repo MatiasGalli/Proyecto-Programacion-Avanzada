@@ -81,7 +81,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 		contentPane.add(btn_back);
 		
 		JComboBox comboBox_category = new JComboBox();
-		comboBox_category.setFont(new Font("Tahoma", Font.BOLD, 16));
+		comboBox_category.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		comboBox_category.setBounds(65, 129, 495, 26);
 		int cant = 0;
 		try {
@@ -126,7 +126,6 @@ public class AdminMenuCategoriesDelete extends JFrame {
 		contentPane.add(lbl_note);
 	}
 	
-	@SuppressWarnings({ "rawtypes" })
 	public void deleteCategory(SQL_Manager connection, String name) throws SQLException {
 		boolean error = false;
 		String sql = "delete from category where name = ?";
@@ -144,10 +143,7 @@ public class AdminMenuCategoriesDelete extends JFrame {
 			JFrame jFrame = new JFrame();
 			jFrame.setAlwaysOnTop(true);
 			JOptionPane.showMessageDialog(jFrame,"Categoría eliminada");
-			
-			JComboBox comboBox_category_new = new JComboBox();
-			comboBox_category_new.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			comboBox_category_new.setBounds(65, 129, 495, 26);
+
 			AdminMenu v4 = new AdminMenu(connection);
 			v4.setLocationRelativeTo(null);
 			v4.setVisible(true);

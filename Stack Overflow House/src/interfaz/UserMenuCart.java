@@ -34,7 +34,6 @@ public class UserMenuCart extends JFrame {
 	private JPanel contentPane;
 	private JTable table_cart;
 	private JScrollPane scrollPane_cart;
-	private JLabel lbl_totalCart;
 	private JTextField textField_units;
 
 	/**
@@ -108,19 +107,14 @@ public class UserMenuCart extends JFrame {
 		lbl_cart.setBounds(63, 100, 839, 26);
 		contentPane.add(lbl_cart);
 
-		JPanel panel_totalCart = new JPanel();
-		panel_totalCart.setBackground(new Color(240, 230, 140));
-		panel_totalCart.setBounds(104, 531, 250, 45);
-		contentPane.add(panel_totalCart);
-		panel_totalCart.setLayout(null);
-
 		int totalAmount = totalPrice(connection);
-		lbl_totalCart = new JLabel("Precio Total: $" + totalAmount);
-		lbl_totalCart.setBackground(new Color(255, 215, 0));
-		lbl_totalCart.setBounds(10, 10, 230, 25);
+		JLabel lbl_totalCart = new JLabel();
+		lbl_totalCart.setText("Precio Total: $" + totalAmount);
 		lbl_totalCart.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbl_totalCart.setBorder(new LineBorder(new Color(0, 0, 128), 2, true));
-		panel_totalCart.add(lbl_totalCart);
+		lbl_totalCart.setBackground(new Color(255, 215, 0));
+		lbl_totalCart.setBounds(127, 543, 230, 25);
+		contentPane.add(lbl_totalCart);
 
 		JButton btn_buy = new JButton("COMPRAR CARRITO");
 		btn_buy.addActionListener(new ActionListener() {
@@ -162,11 +156,11 @@ public class UserMenuCart extends JFrame {
 		});
 		btn_buy.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_buy.setBackground(Color.WHITE);
-		btn_buy.setBounds(410, 42, 215, 26);
+		btn_buy.setBounds(405, 42, 215, 26);
 		contentPane.add(btn_buy);
 
-		JButton btn_delete = new JButton("BORRAR PRODUCTO");
-		btn_delete.addActionListener(new ActionListener() {
+		JButton btn_substractUnit = new JButton("BORRAR UNIDAD");
+		btn_substractUnit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table_cart.getSelectedRow();
 				if (row != -1) {
@@ -176,7 +170,7 @@ public class UserMenuCart extends JFrame {
 					if (product_stock < Integer.parseInt(textField_units.getText())) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
-						JOptionPane.showMessageDialog(jFrame, "No hay stock suficiente para las unidades indicadas.");
+						JOptionPane.showMessageDialog(jFrame, "Dato no válido. Selecciona un número menor a los que se encuentran en el carrito.");
 					} else {
 						try {
 							int cart_id = selectCartId(connection, user);
@@ -207,6 +201,9 @@ public class UserMenuCart extends JFrame {
 						scrollPane_cart = showCart(table_cart);
 						remove(contentPane.getComponentAt(100, 160));
 						contentPane.add(scrollPane_cart);
+						int totalAmount = totalPrice(connection);
+						System.out.println(totalAmount);
+						lbl_totalCart.setText("Precio Total: $" + totalAmount);
 					}
 				} else {
 					JFrame jFrame = new JFrame();
@@ -215,10 +212,10 @@ public class UserMenuCart extends JFrame {
 				}
 			}
 		});
-		btn_delete.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btn_delete.setBackground(Color.WHITE);
-		btn_delete.setBounds(678, 542, 224, 26);
-		contentPane.add(btn_delete);
+		btn_substractUnit.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btn_substractUnit.setBackground(Color.WHITE);
+		btn_substractUnit.setBounds(678, 531, 224, 26);
+		contentPane.add(btn_substractUnit);
 
 		textField_units = new JTextField();
 		textField_units.setText("1");
@@ -256,6 +253,62 @@ public class UserMenuCart extends JFrame {
 		btn_add.setBackground(Color.WHITE);
 		btn_add.setBounds(584, 542, 52, 26);
 		contentPane.add(btn_add);
+		
+		JButton btn_addUnit = new JButton("AGREGAR UNIDAD");
+		btn_addUnit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table_cart.getSelectedRow();
+				if (row != -1) {
+					int units = Integer.parseInt(textField_units.getText());
+					int product_id = Integer.parseInt((String) table_cart.getValueAt(row, 0));
+					int product_remaining_stock = 0;
+					try {
+						product_remaining_stock = selectRemainingStock(connection,product_id);
+					} catch (SQLException e2) {
+						e2.printStackTrace();
+					}
+					if (product_remaining_stock < Integer.parseInt(textField_units.getText())) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame, "Dato no válido. No hay suficiente stock (Stock restante: "+ product_remaining_stock+")");
+					} else {
+						try {
+							int cart_id = selectCartId(connection, user);
+							updateProductAdd(connection, cart_id, product_id, units);
+							JFrame jFrame = new JFrame();
+							jFrame.setAlwaysOnTop(true);
+							JOptionPane.showMessageDialog(jFrame, "Cantidad agregada.");
+							
+							substractStock(connection, units, product_id);
+							
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+						String user_rut = "";
+						try {
+							user_rut = selectUserRut(connection, user);
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+						
+						table_cart = updateTable(connection,user_rut,user);
+						scrollPane_cart = showCart(table_cart);
+						remove(contentPane.getComponentAt(100, 160));
+						contentPane.add(scrollPane_cart);
+						int totalAmount = totalPrice(connection);
+						lbl_totalCart.setText("Precio Total: $" + totalAmount);
+					}
+				} else {
+					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
+					JOptionPane.showMessageDialog(jFrame, "Selecciona un producto.");
+				}
+			}
+		});
+		btn_addUnit.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btn_addUnit.setBackground(Color.WHITE);
+		btn_addUnit.setBounds(678, 563, 224, 26);
+		contentPane.add(btn_addUnit);
 	}
 
 	public JScrollPane showCart(JTable table) {
@@ -378,10 +431,31 @@ public class UserMenuCart extends JFrame {
 		st.setInt(3, product_id);
 		st.executeUpdate();
 	}
+	
+	public void updateProductAdd(SQL_Manager connection, int cart_id, int product_id, int amount) throws SQLException {
+
+		String sql = "update product_cart set amount = amount + ? where cart_id = ? and product_id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, amount);
+		st.setInt(2, cart_id);
+		st.setInt(3, product_id);
+		st.executeUpdate();
+	}
 
 	public void addStock(SQL_Manager connection, int amount, int product_id) throws SQLException {
 
 		String sql = "update product set stock = stock + ? where id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, amount);
+		st.setInt(2, product_id);
+		st.executeUpdate();
+	}
+	
+	public void substractStock(SQL_Manager connection, int amount, int product_id) throws SQLException {
+
+		String sql = "update product set stock = stock - ? where id = ?";
 
 		PreparedStatement st = connection.getConnection().prepareStatement(sql);
 		st.setInt(1, amount);
@@ -421,6 +495,18 @@ public class UserMenuCart extends JFrame {
 		ResultSet rs = st.executeQuery();
 		rs.next();
 		cant = rs.getInt("amount");
+		return cant;
+	}
+	
+	public int selectRemainingStock(SQL_Manager connection,int product_id) throws SQLException {
+		int cant = -1;
+		String sql = "select stock from product where id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, product_id);
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		cant = rs.getInt("stock");
 		return cant;
 	}
 

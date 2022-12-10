@@ -181,15 +181,59 @@ public class AdminMenuProductsEdit extends JFrame {
 		JButton btn_editProduct = new JButton("EDITAR PRODUCTO");
 		btn_editProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				float price = 0;
+				int stock = 0;
 				String product_name = (String) comboBox_products.getSelectedItem();
 				String name = textField_name.getText();
-				float price = Float.parseFloat(textField_price.getText());
-				int stock = Integer.parseInt(textField_stock.getText());
+				boolean noPrice= false;
+				boolean noStock = false;
+				try {
+					price = Float.parseFloat(textField_price.getText());
+				}catch (Exception e3) {
+					noPrice = true;
+				}
+				try {
+					stock = Integer.parseInt(textField_stock.getText());
+				}catch (Exception e3) {
+					noStock = true;
+				}
 				String description = (String) textField_description.getText();
 
 				try {
-					boolean exist = selectNames(connection,product_name);
-					if (exist) {
+					boolean exist = selectNames(connection,name);
+					if (name.equals("")) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Debes ingresar un nombre para editar");
+					}else if (description.equals("")) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Debes ingresar una descripción para editar");
+					}else if (textField_stock.getText().equals("")) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Debes ingresar un stock para editar");
+					}else if (textField_price.getText().equals("")) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Debes ingresar un precio para editar");
+					}else if (noPrice) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Dato invalido en Precio. Debe ingresar un valor numerico");
+					}else if (noStock) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Dato invalido en Stock. Debe ingresar un valor numerico");
+					}else if (price < 100) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Dato invalido en Precio. Valor mínimo: $100");
+					}else if (stock < 0) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Dato invalido en Stock. Stock mínimo: 0");
+					}else if (exist) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "Este nombre de producto ya existe");

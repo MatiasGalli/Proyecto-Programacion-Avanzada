@@ -328,7 +328,7 @@ public class Register extends JFrame {
 															v3.setVisible(true);
 															dispose();
 														} else {
-															AdminMenu v4 = new AdminMenu(fullrut, connection);
+															AdminMenu v4 = new AdminMenu(rutAdmin, connection);
 															v4.setLocationRelativeTo(null);
 															v4.setVisible(true);
 															dispose();

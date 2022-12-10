@@ -164,15 +164,24 @@ public class AdminMenuUsersEdit extends JFrame {
 					admin = false;
 				}
 				try {
-					editUsers(connection,user_dni,name,password,admin);
+					if (name.equals("")) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Debes ingresar un nombre para editar");
+					}else if (password.equals("")) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Debes ingresar una contraseña para editar");
+					}else {
+						editUsers(connection,user_dni,name,password,admin);
+						AdminMenu v4 = new AdminMenu(rut, connection);
+						v4.setLocationRelativeTo(null);
+						v4.setVisible(true);
+						dispose();
+					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
-				}
-				
-				AdminMenu v4 = new AdminMenu(rut, connection);
-				v4.setLocationRelativeTo(null);
-				v4.setVisible(true);
-				dispose();
+				}			
 			}
 		});
 		btn_edit.setFont(new Font("Tahoma", Font.PLAIN, 23));

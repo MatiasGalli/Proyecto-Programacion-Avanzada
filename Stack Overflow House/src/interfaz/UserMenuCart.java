@@ -109,7 +109,7 @@ public class UserMenuCart extends JFrame {
 
 		int totalAmount = totalPrice(connection,user_rut);
 		JLabel lbl_totalCart = new JLabel();
-		lbl_totalCart.setText("Precio Total: $" + totalAmount);
+		lbl_totalCart.setText("Precio Total: \u0024" + totalAmount);
 		lbl_totalCart.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbl_totalCart.setBorder(new LineBorder(new Color(0, 0, 128), 2, true));
 		lbl_totalCart.setBackground(new Color(255, 215, 0));
@@ -147,7 +147,7 @@ public class UserMenuCart extends JFrame {
 				}
 				JFrame jFrame = new JFrame();
 				jFrame.setAlwaysOnTop(true);
-				JOptionPane.showMessageDialog(jFrame, "¡Compra realizada!");
+				JOptionPane.showMessageDialog(jFrame, "\u00A1Compra realizada!");
 				UserMenu v4 = new UserMenu(user, connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
@@ -170,7 +170,7 @@ public class UserMenuCart extends JFrame {
 					if (product_stock < Integer.parseInt(textField_units.getText())) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
-						JOptionPane.showMessageDialog(jFrame, "Dato no válido. Selecciona un número menor a los que se encuentran en el carrito.");
+						JOptionPane.showMessageDialog(jFrame, "Dato no v\u00E1lido. Selecciona un n\u00FAmero menor a los que se encuentran en el carrito.");
 					} else {
 						try {
 							int cart_id = selectCartId(connection, user);
@@ -269,7 +269,7 @@ public class UserMenuCart extends JFrame {
 					if (product_remaining_stock < Integer.parseInt(textField_units.getText())) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
-						JOptionPane.showMessageDialog(jFrame, "Dato no válido. No hay suficiente stock (Stock restante: "+ product_remaining_stock+")");
+						JOptionPane.showMessageDialog(jFrame, "Dato no v\u00E1lido. No hay suficiente stock (Stock restante: "+ product_remaining_stock+")");
 					} else {
 						try {
 							int cart_id = selectCartId(connection, user);

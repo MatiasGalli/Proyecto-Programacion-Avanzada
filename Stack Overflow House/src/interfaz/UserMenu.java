@@ -125,7 +125,7 @@ public class UserMenu extends JFrame {
 							substractStock(connection, units, product_id);
 							JFrame jFrame = new JFrame();
 							jFrame.setAlwaysOnTop(true);
-							JOptionPane.showMessageDialog(jFrame, "Producto añadido al carrito.");
+							JOptionPane.showMessageDialog(jFrame, "Producto a\u00F1adido al carrito.");
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
@@ -222,7 +222,7 @@ public class UserMenu extends JFrame {
 		comboBox_categorySearch.setBounds(211, 37, 216, 26);
 		panel_search1.add(comboBox_categorySearch);
 		comboBox_categorySearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		comboBox_categorySearch.setModel(new DefaultComboBoxModel(new String[] { "Nombre del producto", "Categoría" }));
+		comboBox_categorySearch.setModel(new DefaultComboBoxModel(new String[] { "Nombre del producto", "Categor\u00EDa" }));
 
 		JPanel panel_search2 = new JPanel();
 		panel_search2.setBorder(null);
@@ -239,7 +239,7 @@ public class UserMenu extends JFrame {
 				String categorySearch = (String) comboBox_categorySearch.getSelectedItem();
 				if (categorySearch.equals("Nombre del producto")) {
 					categorySearch = "name";
-				} else if (categorySearch.equals("Categoría")) {
+				} else if (categorySearch.equals("Categor\u00EDa")) {
 					categorySearch = "category_id";
 				}
 				String search = textField_search.getText();
@@ -256,7 +256,7 @@ public class UserMenu extends JFrame {
 		btn_search.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_search.setBackground(Color.WHITE);
 
-		JLabel lbl_description = new JLabel("Descripción:");
+		JLabel lbl_description = new JLabel("Descripci\u00F3n:");
 		lbl_description.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lbl_description.setBounds(47, 482, 116, 26);
 		contentPane.add(lbl_description);
@@ -375,7 +375,7 @@ public class UserMenu extends JFrame {
 		btn_add.setBounds(232, 563, 52, 26);
 		contentPane.add(btn_add);
 
-		JButton btn_seeData = new JButton("VER DESCRIPCIÓN");
+		JButton btn_seeData = new JButton("VER DESCRIPCI\u00D3N");
 		btn_seeData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table_products.getSelectedRow();
@@ -495,7 +495,7 @@ public class UserMenu extends JFrame {
 		return null;
 	}
 
-	// Crea una tabla nueva dado ciertos parámetros.
+	// Crea una tabla nueva dado ciertos parametros.
 	public JTable updateTable(SQL_Manager connection) {
 		try {
 			JTable table = new JTable();
@@ -509,7 +509,7 @@ public class UserMenu extends JFrame {
 			sql = "Select p.id, p.name, p.price, p.stock, c.name as category_name from product p inner join category c on c.id = p.category_id where stock <> 0 order by name asc";
 			st = connection.getConnection().prepareStatement(sql);
 			rs = st.executeQuery();
-			String titles[] = { "ID", "Nombre del producto", "Precio", "Stock", "Categoría" };
+			String titles[] = { "ID", "Nombre del producto", "Precio", "Stock", "Categor\u00EDa" };
 			DefaultTableModel model = new DefaultTableModel(null, titles) {
 				boolean[] columnEditables = new boolean[] { false, false, false, false, false };
 
@@ -617,7 +617,7 @@ public class UserMenu extends JFrame {
 		if (cont == 0) {
 			JFrame jFrame = new JFrame();
 			jFrame.setAlwaysOnTop(true);
-			JOptionPane.showMessageDialog(jFrame, "No hay coincidencias en la búsqueda");
+			JOptionPane.showMessageDialog(jFrame, "No hay coincidencias en la b\u00FAsqueda");
 		} else {
 			table.setModel(model);
 			table.getColumnModel().getColumn(0).setPreferredWidth(20);
@@ -648,7 +648,7 @@ public class UserMenu extends JFrame {
 			sql = "Select p.id, p.name, p.price, p.stock, c.name as category_name from product p inner join category c on c.id = p.category_id where p.stock <> 0 order by " + category + " " + asc;
 			st = connection.getConnection().prepareStatement(sql);
 			rs = st.executeQuery();
-			String titles[] = { "ID", "Nombre del producto", "Precio", "Stock", "Categoría" };
+			String titles[] = { "ID", "Nombre del producto", "Precio", "Stock", "Categor\u00EDa" };
 			DefaultTableModel model = new DefaultTableModel(null, titles) {
 				boolean[] columnEditables = new boolean[] { false, false, false, false, false };
 

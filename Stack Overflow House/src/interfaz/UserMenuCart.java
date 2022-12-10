@@ -107,7 +107,7 @@ public class UserMenuCart extends JFrame {
 		lbl_cart.setBounds(63, 100, 839, 26);
 		contentPane.add(lbl_cart);
 
-		int totalAmount = totalPrice(connection);
+		int totalAmount = totalPrice(connection,user_rut);
 		JLabel lbl_totalCart = new JLabel();
 		lbl_totalCart.setText("Precio Total: $" + totalAmount);
 		lbl_totalCart.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -201,8 +201,7 @@ public class UserMenuCart extends JFrame {
 						scrollPane_cart = showCart(table_cart);
 						remove(contentPane.getComponentAt(100, 160));
 						contentPane.add(scrollPane_cart);
-						int totalAmount = totalPrice(connection);
-						System.out.println(totalAmount);
+						int totalAmount = totalPrice(connection,user_rut);
 						lbl_totalCart.setText("Precio Total: $" + totalAmount);
 					}
 				} else {
@@ -295,7 +294,7 @@ public class UserMenuCart extends JFrame {
 						scrollPane_cart = showCart(table_cart);
 						remove(contentPane.getComponentAt(100, 160));
 						contentPane.add(scrollPane_cart);
-						int totalAmount = totalPrice(connection);
+						int totalAmount = totalPrice(connection,user_rut);
 						lbl_totalCart.setText("Precio Total: $" + totalAmount);
 					}
 				} else {
@@ -383,33 +382,15 @@ public class UserMenuCart extends JFrame {
 		return null;
 	}
 
-	public int totalPrice(SQL_Manager connection) {
+	public int totalPrice(SQL_Manager connection, String user_rut) {
 		int total = 0;
 		try {
 			String sql;
 			PreparedStatement st;
 			ResultSet rs;
-			sql = "select (p.price * pc.amount) as total from product_cart pc inner join product p on p.id = pc.product_id";
+			sql = "select (p.price * pc.amount) as total from product_cart pc inner join product p on p.id = pc.product_id inner join cart c on c.id = pc.cart_id inner join users u on u.rut = c.user_rut  where u.rut = ?";
 			st = connection.getConnection().prepareStatement(sql);
-			rs = st.executeQuery();
-			while (rs.next()) {
-				total += Integer.parseInt(rs.getString("total"));
-			}
-			return (total);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e);
-		}
-		return 0;
-	}
-
-	public int deleteProduct(SQL_Manager connection) {
-		int total = 0;
-		try {
-			String sql;
-			PreparedStatement st;
-			ResultSet rs;
-			sql = "update product set amount = ? where ";
-			st = connection.getConnection().prepareStatement(sql);
+			st.setString(1, user_rut);
 			rs = st.executeQuery();
 			while (rs.next()) {
 				total += Integer.parseInt(rs.getString("total"));

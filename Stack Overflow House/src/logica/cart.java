@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class cart {
+public class Cart {
 
 	
 	public void insertCart(SQL_Manager  connection, int id, String user_rut) throws SQLException {

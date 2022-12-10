@@ -19,6 +19,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logica.SQL_Manager;
+import sendMail.SendMails;
 
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
@@ -120,24 +121,38 @@ public class UserMenuCart extends JFrame {
 		btn_buy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int count = 0;
+				String rut ="";
 				try {
-					count = countProducts(connection);
+					rut = selectUserRut(connection,user);
 				} catch (SQLException e2) {
 					e2.printStackTrace();
 				}
+				try {
+					count = countProducts(connection, rut);
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+				
+				String message = "Has realizado la siguiente compra: <br><br>";
 				for (int i = 0; i < count; i++) {
 					int new_id = -1;
 					int product_stock = Integer.parseInt((String) table_cart.getValueAt(i, 3));
+					int product_id = Integer.parseInt((String) table_cart.getValueAt(i, 0));
+					int product_total_price = productPrice(connection,rut,product_id);
 					String product_name = (String) table_cart.getValueAt(i, 1);
 					try {
 						new_id = countHistoryProductID(connection);
 						int history_id = selectHistoryID(connection, user);
 						insertHistoryProduct(connection, new_id + 1, history_id, product_name, product_stock);
+						message += " - " +product_name + " x " + product_stock + " unidades = $" + product_total_price + "<br>";
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
 
 				}
+				
+				int totalAmount = totalPrice(connection,rut);
+				message += "<br>      - Precio Total de la compra: $" + totalAmount + "<br><br><br>Gracias por su preferencia.";
 				int cart_id = 0;
 				try {
 					cart_id = selectCartId(connection, user);
@@ -148,6 +163,16 @@ public class UserMenuCart extends JFrame {
 				JFrame jFrame = new JFrame();
 				jFrame.setAlwaysOnTop(true);
 				JOptionPane.showMessageDialog(jFrame, "\u00A1Compra realizada!");
+				String user_mail = "";
+				try {
+					user_mail = selectUserEmail(connection,user);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				String subject = "Gracias por tu compra en SOH, " + user;
+				SendMails mail = new SendMails(user_mail,subject,message);
+				mail.createEmail();
+				mail.sendEmail();
 				UserMenu v4 = new UserMenu(user, connection);
 				v4.setLocationRelativeTo(null);
 				v4.setVisible(true);
@@ -401,6 +426,28 @@ public class UserMenuCart extends JFrame {
 		}
 		return 0;
 	}
+	
+	public int productPrice(SQL_Manager connection, String user_rut, int product_id) {
+		int total = 0;
+		try {
+			String sql;
+			PreparedStatement st;
+			ResultSet rs;
+			sql = "select (p.price * pc.amount) as total from product_cart pc inner join product p on p.id = pc.product_id inner join cart c on c.id = pc.cart_id inner join users u on u.rut = c.user_rut  where u.rut = ? and p.id = ?";
+			st = connection.getConnection().prepareStatement(sql);
+			st.setString(1, user_rut);
+			st.setInt(2, product_id);
+			rs = st.executeQuery();
+			
+			if (rs.next()) {
+				total = Integer.parseInt(rs.getString("total"));
+			}
+			return (total);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
+		return 0;
+	}
 
 	public void updateProduct(SQL_Manager connection, int cart_id, int product_id, int amount) throws SQLException {
 
@@ -551,12 +598,13 @@ public class UserMenuCart extends JFrame {
 		return id;
 	}
 
-	public int countProducts(SQL_Manager connection) throws SQLException {
+	public int countProducts(SQL_Manager connection, String user_rut) throws SQLException {
 
-		String sql = "select count(*) as id from product_cart";
+		String sql = "select count(*) as id from product_cart pc inner join cart c on c.id = pc.cart_id inner join users u on u.rut = c.user_rut where u.rut = ?";
 
-		Statement st = connection.getConnection().createStatement();
-		ResultSet rs = st.executeQuery(sql);
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setString(1,user_rut);
+		ResultSet rs = st.executeQuery();
 		rs.next();
 		int id = rs.getInt("id");
 		return id;
@@ -580,6 +628,19 @@ public class UserMenuCart extends JFrame {
 		ResultSet rs = st.executeQuery();
 		if (rs.next()) {
 			rut = rs.getString("rut");
+		}
+		return rut;
+	}
+	
+	public String selectUserEmail(SQL_Manager connection, String username) throws SQLException {
+		String rut = "";
+		String sql = "select email from users where username = ?";
+		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, username);
+		ResultSet rs = st.executeQuery();
+		if (rs.next()) {
+			rut = rs.getString("email");
 		}
 		return rut;
 	}

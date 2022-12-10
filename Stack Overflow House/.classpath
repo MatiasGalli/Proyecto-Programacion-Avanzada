@@ -7,5 +7,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="postgresql-42.5.0.jar"/>
+	<classpathentry kind="lib" path="javax.activation-1.1.0.v201105071233.jar"/>
+	<classpathentry kind="lib" path="javax.ejb.jar"/>
+	<classpathentry kind="lib" path="javax.faces-api-2.0.jar"/>
+	<classpathentry kind="lib" path="javax-inject.jar"/>
+	<classpathentry kind="lib" path="mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

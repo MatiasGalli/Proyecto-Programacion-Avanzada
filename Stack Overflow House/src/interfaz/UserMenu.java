@@ -16,13 +16,9 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.AbstractListModel;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.border.LineBorder;
-
 import logica.SQL_Manager;
 
 import javax.swing.ImageIcon;
@@ -42,7 +38,6 @@ public class UserMenu extends JFrame {
 	private JScrollPane scrollPane_products;
 	private JTextField textField_search;
 	private JTextField textField_description;
-	private JTextField textField_commentary;
 	private JTextField textField_units;
 
 	/**
@@ -68,6 +63,7 @@ public class UserMenu extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public UserMenu(String user, SQL_Manager connection) {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserMenu.class.getResource("/assets/SOH_logo.png")));
 		setTitle("Men\u00FA de usuario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,7 +90,10 @@ public class UserMenu extends JFrame {
 		JButton btn_userAccount = new JButton("CUENTA DE USUARIO");
 		btn_userAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				UserMenuAccount v12 = new UserMenuAccount(user, connection);
+				v12.setLocationRelativeTo(null);
+				v12.setVisible(true);
+				dispose();
 			}
 		});
 		btn_userAccount.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -114,23 +113,27 @@ public class UserMenu extends JFrame {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "No hay stock suficiente para las unidades indicadas.");
-					}else {
-						 try {
-							 int cart_id = selectCartId(connection,user);
-							 boolean exist = productExists(connection,cart_id,product_id);
-							 if (exist) {
-								 updateProduct(connection, cart_id, product_id,units);
-							 }else {
-								 addProduct(connection, cart_id, product_id,units);
-							 }
-							 substractStock(connection, units,product_id);
-							 JFrame jFrame = new JFrame();
-							 jFrame.setAlwaysOnTop(true);
-							 JOptionPane.showMessageDialog(jFrame, "Producto añadido al carrito.");
-						 } catch (SQLException e1) { 
-							 e1.printStackTrace(); 
-						 }
-					} 
+					} else {
+						try {
+							int cart_id = selectCartId(connection, user);
+							boolean exist = productExists(connection, cart_id, product_id);
+							if (exist) {
+								updateProduct(connection, cart_id, product_id, units);
+							} else {
+								addProduct(connection, cart_id, product_id, units);
+							}
+							substractStock(connection, units, product_id);
+							JFrame jFrame = new JFrame();
+							jFrame.setAlwaysOnTop(true);
+							JOptionPane.showMessageDialog(jFrame, "Producto añadido al carrito.");
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+						table_products = updateTable(connection, "name", "asc");
+						scrollPane_products = showProducts(table_products);
+						remove(contentPane.getComponentAt(37, 200));
+						contentPane.add(scrollPane_products);
+					}
 				} else {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
@@ -154,8 +157,8 @@ public class UserMenu extends JFrame {
 				int cart_id = -1;
 				boolean exist = false;
 				try {
-					cart_id = selectCartId(connection,user);
-					exist = productInCart(connection,cart_id);
+					cart_id = selectCartId(connection, user);
+					exist = productInCart(connection, cart_id);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -164,12 +167,12 @@ public class UserMenu extends JFrame {
 					v8.setLocationRelativeTo(null);
 					v8.setVisible(true);
 					dispose();
-				}else {
+				} else {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "No hay productos en el carrito.");
 				}
-				
+
 			}
 		});
 		btn_seeCart.setFont(new Font("Tahoma", Font.PLAIN, 22));
@@ -203,32 +206,34 @@ public class UserMenu extends JFrame {
 		textField_search.setBounds(223, 82, 325, 26);
 		contentPane.add(textField_search);
 
-		JLabel lbl_category = new JLabel("en la categor\u00EDa:");
-		lbl_category.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lbl_category.setBounds(565, 82, 144, 26);
-		contentPane.add(lbl_category);
-
-		JComboBox comboBox_categorySearch = new JComboBox();
-		comboBox_categorySearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		comboBox_categorySearch.setBounds(680, 82, 216, 26);
-		comboBox_categorySearch.setModel(new DefaultComboBoxModel(new String[] { "Nombre del producto", "Categoría" }));
-		contentPane.add(comboBox_categorySearch);
-
 		JPanel panel_search1 = new JPanel();
 		panel_search1.setBorder(null);
 		panel_search1.setBackground(new Color(240, 230, 140));
-		panel_search1.setBounds(36, 74, 880, 38);
+		panel_search1.setBounds(36, 74, 519, 69);
 		contentPane.add(panel_search1);
 		panel_search1.setLayout(null);
+
+		JLabel lbl_category = new JLabel("en la categor\u00EDa:");
+		lbl_category.setBounds(96, 37, 144, 26);
+		panel_search1.add(lbl_category);
+		lbl_category.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+		JComboBox comboBox_categorySearch = new JComboBox();
+		comboBox_categorySearch.setBounds(211, 37, 216, 26);
+		panel_search1.add(comboBox_categorySearch);
+		comboBox_categorySearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		comboBox_categorySearch.setModel(new DefaultComboBoxModel(new String[] { "Nombre del producto", "Categoría" }));
 
 		JPanel panel_search2 = new JPanel();
 		panel_search2.setBorder(null);
 		panel_search2.setBackground(new Color(240, 230, 140));
-		panel_search2.setBounds(36, 110, 180, 38);
+		panel_search2.setBounds(204, 141, 180, 38);
 		contentPane.add(panel_search2);
 		panel_search2.setLayout(null);
 
 		JButton btn_search = new JButton("BUSCAR");
+		btn_search.setBounds(25, 5, 140, 26);
+		panel_search2.add(btn_search);
 		btn_search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String categorySearch = (String) comboBox_categorySearch.getSelectedItem();
@@ -248,8 +253,6 @@ public class UserMenu extends JFrame {
 				contentPane.add(scrollPane_products);
 			}
 		});
-		btn_search.setBounds(20, 7, 140, 26);
-		panel_search2.add(btn_search);
 		btn_search.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_search.setBackground(Color.WHITE);
 
@@ -266,19 +269,6 @@ public class UserMenu extends JFrame {
 		textField_description.setBounds(141, 482, 755, 26);
 		contentPane.add(textField_description);
 
-		JLabel lbl_commentary = new JLabel("Comentario:");
-		lbl_commentary.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lbl_commentary.setBounds(47, 517, 116, 26);
-		contentPane.add(lbl_commentary);
-
-		textField_commentary = new JTextField();
-		textField_commentary.setEditable(false);
-		textField_commentary.setText((String) null);
-		textField_commentary.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField_commentary.setColumns(10);
-		textField_commentary.setBounds(141, 518, 755, 26);
-		contentPane.add(textField_commentary);
-
 		textField_units = new JTextField();
 		textField_units.setText("1");
 		textField_units.setEditable(false);
@@ -291,92 +281,70 @@ public class UserMenu extends JFrame {
 		panel_info.setLayout(null);
 		panel_info.setBorder(null);
 		panel_info.setBackground(new Color(240, 230, 140));
-		panel_info.setBounds(36, 417, 880, 136);
+		panel_info.setBounds(36, 417, 880, 113);
 		contentPane.add(panel_info);
 
-		JLabel lbl_advice = new JLabel(
-				"* Para ver los comentarios de un producto, primero debes presionar VER DATOS seleccionando dicho producto y luego seleccionar el usuario desde la caja correspondiente");
-		lbl_advice.setBounds(61, 39, 809, 26);
-		panel_info.add(lbl_advice);
-		lbl_advice.setFont(new Font("Tahoma", Font.ITALIC, 10));
-
-		JComboBox comboBox_commentary = new JComboBox();
-		comboBox_commentary.setBounds(372, 11, 235, 26);
-		panel_info.add(comboBox_commentary);
-		comboBox_commentary.setFont(new Font("Tahoma", Font.PLAIN, 18));
-
-		JButton btn_seeComment = new JButton("VER COMENTARIO");
-		btn_seeComment.setBounds(617, 10, 210, 26);
+		JButton btn_seeComment = new JButton("VER COMENTARIOS");
+		btn_seeComment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table_products.getSelectedRow();
+				if (row != -1) {
+					boolean exist = false;
+					int product_id = 0;
+					try {
+						product_id = Integer.parseInt((String) table_products.getValueAt(row, 0));
+						exist = productComment(connection, product_id);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					if (exist) {
+						product_id = Integer.parseInt((String) table_products.getValueAt(row, 0));
+						UserMenuComments v14 = new UserMenuComments(user, product_id, connection);
+						v14.setLocationRelativeTo(null);
+						v14.setVisible(true);
+						dispose();
+					}else {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame, "No hay comentarios de este producto");
+					}
+					
+				} else {
+					JFrame jFrame = new JFrame();
+					jFrame.setAlwaysOnTop(true);
+					JOptionPane.showMessageDialog(jFrame, "Selecciona un producto.");
+				}
+				
+			}
+		});
+		btn_seeComment.setBounds(481, 23, 219, 26);
 		panel_info.add(btn_seeComment);
 		btn_seeComment.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_seeComment.setBackground(Color.WHITE);
 
-		JLabel lbl_users = new JLabel("Usuarios:\r\n");
-		lbl_users.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lbl_users.setBounds(298, 12, 116, 26);
-		panel_info.add(lbl_users);
-
 		JRadioButton rdbtn_asc = new JRadioButton("Ascendente");
 		rdbtn_asc.setSelected(true);
 		rdbtn_asc.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		rdbtn_asc.setBackground((Color) null);
-		rdbtn_asc.setBounds(302, 155, 140, 15);
+		rdbtn_asc.setBackground(new Color(240, 230, 140));
+		rdbtn_asc.setBounds(600, 114, 140, 15);
 		contentPane.add(rdbtn_asc);
 
 		JRadioButton rdbtn_desc = new JRadioButton("Descendente");
 		rdbtn_desc.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		rdbtn_desc.setBackground((Color) null);
-		rdbtn_desc.setBounds(444, 156, 150, 15);
+		rdbtn_desc.setBackground(new Color(240, 230, 140));
+		rdbtn_desc.setBounds(742, 115, 150, 15);
 		contentPane.add(rdbtn_desc);
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(rdbtn_asc);
 		group.add(rdbtn_desc);
 
-		JLabel lbl_orderBy = new JLabel("Ordenar por:");
-		lbl_orderBy.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_orderBy.setBounds(267, 123, 115, 26);
-		contentPane.add(lbl_orderBy);
-
 		JComboBox comboBox_categoryOrder = new JComboBox();
 		comboBox_categoryOrder.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		comboBox_categoryOrder
 				.setModel(new DefaultComboBoxModel(new String[] { "Nombre del producto", "Precio", "Stock" }));
-		comboBox_categoryOrder.setBounds(392, 124, 230, 26);
+		comboBox_categoryOrder.setBounds(690, 83, 214, 26);
 		contentPane.add(comboBox_categoryOrder);
-
-		JButton btn_order = new JButton("ORDENAR");
-		btn_order.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String order = (String) comboBox_categoryOrder.getSelectedItem();
-				if (order.equals("Nombre del producto")) {
-					order = "name";
-				} else if (order.equals("Precio")) {
-					order = "price";
-				} else if (order.equals("Stock")) {
-					order = "stock";
-				}
-				group.getSelection().getSelectedObjects();
-				String asc = null;
-				Object[] ascbtn = rdbtn_asc.getSelectedObjects();
-				if (ascbtn == null) {
-					asc = "DESC";
-				} else {
-					asc = "ASC";
-				}
-				// LA TABLA SE ACTUALIZA, SE CARGA AL SCROLLPANE, LA TABLA ANTERIOR SE ELIMINA Y
-				// SE AGREGA LA NUEVA A LA VENTANA.
-
-				table_products = updateTable(connection, order, asc);
-				scrollPane_products = showProducts(table_products);
-				remove(contentPane.getComponentAt(37, 200));
-				contentPane.add(scrollPane_products);
-			}
-		});
-		btn_order.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btn_order.setBackground(Color.WHITE);
-		btn_order.setBounds(661, 135, 132, 26);
-		contentPane.add(btn_order);
 
 		JButton btn_minus = new JButton("-");
 		btn_minus.addActionListener(new ActionListener() {
@@ -407,7 +375,7 @@ public class UserMenu extends JFrame {
 		btn_add.setBounds(232, 563, 52, 26);
 		contentPane.add(btn_add);
 
-		JButton btn_seeData = new JButton("VER DATOS");
+		JButton btn_seeData = new JButton("VER DESCRIPCIÓN");
 		btn_seeData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table_products.getSelectedRow();
@@ -423,12 +391,65 @@ public class UserMenu extends JFrame {
 					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Selecciona un producto.");
 				}
+
 			}
 		});
-		btn_seeData.setBounds(10, 10, 210, 26);
+		btn_seeData.setBounds(183, 23, 219, 26);
 		panel_info.add(btn_seeData);
 		btn_seeData.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_seeData.setBackground(Color.WHITE);
+
+		JPanel panel_order = new JPanel();
+		panel_order.setLayout(null);
+		panel_order.setBorder(null);
+		panel_order.setBackground(new Color(240, 230, 140));
+		panel_order.setBounds(581, 74, 339, 69);
+		contentPane.add(panel_order);
+
+		JLabel lbl_orderBy = new JLabel("Ordenar por:");
+		lbl_orderBy.setBounds(10, 10, 115, 26);
+		panel_order.add(lbl_orderBy);
+		lbl_orderBy.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+		JPanel panel_order2 = new JPanel();
+		panel_order2.setLayout(null);
+		panel_order2.setBorder(null);
+		panel_order2.setBackground(new Color(240, 230, 140));
+		panel_order2.setBounds(661, 141, 180, 38);
+		contentPane.add(panel_order2);
+
+		JButton btn_order = new JButton("ORDENAR");
+		btn_order.setBounds(26, 5, 132, 26);
+		panel_order2.add(btn_order);
+		btn_order.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String order = (String) comboBox_categoryOrder.getSelectedItem();
+				if (order.equals("Nombre del producto")) {
+					order = "name";
+				} else if (order.equals("Precio")) {
+					order = "price";
+				} else if (order.equals("Stock")) {
+					order = "stock";
+				}
+				group.getSelection().getSelectedObjects();
+				String asc = null;
+				Object[] ascbtn = rdbtn_asc.getSelectedObjects();
+				if (ascbtn == null) {
+					asc = "DESC";
+				} else {
+					asc = "ASC";
+				}
+				// LA TABLA SE ACTUALIZA, SE CARGA AL SCROLLPANE, LA TABLA ANTERIOR SE ELIMINA Y
+				// SE AGREGA LA NUEVA A LA VENTANA.
+
+				table_products = updateTable(connection, order, asc);
+				scrollPane_products = showProducts(table_products);
+				remove(contentPane.getComponentAt(37, 200));
+				contentPane.add(scrollPane_products);
+			}
+		});
+		btn_order.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btn_order.setBackground(Color.WHITE);
 
 	}
 
@@ -481,11 +502,11 @@ public class UserMenu extends JFrame {
 			table.setShowVerticalLines(false);
 			table.setFont(new Font("Tahoma", Font.PLAIN, 16));
 			table.setBorder(null);
-			String sql, category;
+			String sql;
 			PreparedStatement st;
 			ResultSet rs;
 			// EDITAR CONSULTA (INNER JOIN)
-			sql = "Select * from product where stock <> 0 order by id asc";
+			sql = "Select p.id, p.name, p.price, p.stock, c.name as category_name from product p inner join category c on c.id = p.category_id where stock <> 0 order by name asc";
 			st = connection.getConnection().prepareStatement(sql);
 			rs = st.executeQuery();
 			String titles[] = { "ID", "Nombre del producto", "Precio", "Stock", "Categoría" };
@@ -502,8 +523,7 @@ public class UserMenu extends JFrame {
 				row[1] = rs.getString("name");
 				row[2] = "$ " + rs.getString("price");
 				row[3] = rs.getString("stock");
-				category = getCategories(connection, rs.getInt("category_id"));
-				row[4] = category;
+				row[4] = rs.getString("category_name");
 				model.addRow(row);
 
 			}
@@ -561,7 +581,7 @@ public class UserMenu extends JFrame {
 		PreparedStatement st;
 		ResultSet rs = null;
 		int cont = 0;
-		sql = "Select * from product where " + category + " = ? and stock <> 0;";
+		sql = "Select p.id, p.name, p.price, p.stock, c.name as category_name from product p inner join category c on c.id = p.category_id where p." + category + " = ? and stock <> 0;";
 		st = connection.getConnection().prepareStatement(sql);
 		if (product_id == 0) {
 			st.setString(1, search);
@@ -589,8 +609,7 @@ public class UserMenu extends JFrame {
 				row[1] = rs.getString("name");
 				row[2] = "$ " + rs.getString("price");
 				row[3] = rs.getString("stock");
-				category = getCategories(connection, rs.getInt("category_id"));
-				row[4] = category;
+				row[4] = rs.getString("category_name");
 				model.addRow(row);
 				cont++;
 			}
@@ -626,7 +645,7 @@ public class UserMenu extends JFrame {
 			String sql;
 			PreparedStatement st;
 			ResultSet rs;
-			sql = "Select * from product where stock <> 0 order by " + category + " " + asc;
+			sql = "Select p.id, p.name, p.price, p.stock, c.name as category_name from product p inner join category c on c.id = p.category_id where p.stock <> 0 order by " + category + " " + asc;
 			st = connection.getConnection().prepareStatement(sql);
 			rs = st.executeQuery();
 			String titles[] = { "ID", "Nombre del producto", "Precio", "Stock", "Categoría" };
@@ -637,14 +656,13 @@ public class UserMenu extends JFrame {
 					return columnEditables[column];
 				}
 			};
-			String row[] = new String[6];
+			String row[] = new String[5];
 			while (rs.next()) {
 				row[0] = rs.getString("id");
 				row[1] = rs.getString("name");
 				row[2] = "$ " + rs.getString("price");
 				row[3] = rs.getString("stock");
-				category = getCategories(connection, rs.getInt("category_id"));
-				row[4] = category;
+				row[4] = rs.getString("category_name");
 				model.addRow(row);
 
 			}
@@ -679,8 +697,7 @@ public class UserMenu extends JFrame {
 		textField_description.setText(description);
 
 	}
-	
-	
+
 	public int selectCartId(SQL_Manager connection, String username) throws SQLException {
 		int cart_id = -1;
 		String sql = "select id from cart where cart.user_rut = (select rut from users where username = ?)";
@@ -692,7 +709,7 @@ public class UserMenu extends JFrame {
 		cart_id = rs.getInt("id");
 		return cart_id;
 	}
-	
+
 	public void addProduct(SQL_Manager connection, int cart_id, int product_id, int amount) throws SQLException {
 
 		String sql = "Insert into product_cart(cart_id, product_id, amount) values (?,?,?)";
@@ -703,7 +720,7 @@ public class UserMenu extends JFrame {
 		st.setInt(3, amount);
 		st.executeUpdate();
 	}
-	
+
 	public void substractStock(SQL_Manager connection, int amount, int product_id) throws SQLException {
 
 		String sql = "update product set stock = stock - ? where id = ?";
@@ -713,7 +730,7 @@ public class UserMenu extends JFrame {
 		st.setInt(2, product_id);
 		st.executeUpdate();
 	}
-	
+
 	public boolean productExists(SQL_Manager connection, int cart_id, int product_id) throws SQLException {
 
 		boolean exist = false;
@@ -723,12 +740,12 @@ public class UserMenu extends JFrame {
 		st.setInt(1, product_id);
 		st.setInt(2, cart_id);
 		ResultSet rs = st.executeQuery();
-		if(rs.next()) {
+		if (rs.next()) {
 			exist = true;
 		}
 		return exist;
 	}
-	
+
 	public void updateProduct(SQL_Manager connection, int cart_id, int product_id, int amount) throws SQLException {
 
 		String sql = "update product_cart set amount = amount + ? where cart_id = ? and product_id = ?";
@@ -739,7 +756,7 @@ public class UserMenu extends JFrame {
 		st.setInt(3, product_id);
 		st.executeUpdate();
 	}
-	
+
 	public boolean productInCart(SQL_Manager connection, int cart_id) throws SQLException {
 
 		boolean exist = false;
@@ -748,9 +765,36 @@ public class UserMenu extends JFrame {
 		PreparedStatement st = connection.getConnection().prepareStatement(sql);
 		st.setInt(1, cart_id);
 		ResultSet rs = st.executeQuery();
-		if(rs.next()) {
+		if (rs.next()) {
 			exist = true;
 		}
 		return exist;
+	}
+	
+	public boolean productComment(SQL_Manager connection, int product_id) throws SQLException {
+
+		boolean exist = false;
+		String sql = "select c.product_id from commentary c inner join product p on p.id = c.product_id  inner join users u on u.rut = c.user_rut where c.product_id = ?";
+
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setInt(1, product_id);
+		ResultSet rs = st.executeQuery();
+		if (rs.next()) {
+			exist = true;
+		}
+		return exist;
+	}
+
+	public String selectUserRut(SQL_Manager connection, String username) throws SQLException {
+		String rut = "";
+		String sql = "select rut from users where username = ?";
+		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		st.setString(1, username);
+		ResultSet rs = st.executeQuery();
+		if (rs.next()) {
+			rut = rs.getString("rut");
+		}
+		return rut;
 	}
 }

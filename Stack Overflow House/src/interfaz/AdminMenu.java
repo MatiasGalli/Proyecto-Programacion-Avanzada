@@ -8,7 +8,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -236,9 +235,9 @@ public class AdminMenu extends JFrame {
 		JButton btn_adminAccount = new JButton("CUENTA DE ADMINISTRADOR");
 		btn_adminAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login v1 = new Login(connection);
-				v1.setLocationRelativeTo(null);
-				v1.setVisible(true);
+				AdminMenuInfo v13 = new AdminMenuInfo(connection,rut);
+				v13.setLocationRelativeTo(null);
+				v13.setVisible(true);
 				dispose();
 			}
 		});
@@ -250,10 +249,10 @@ public class AdminMenu extends JFrame {
 		JButton btn_back = new JButton();
 		btn_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFrame jFrame = new JFrame();
-				jFrame.setAlwaysOnTop(true);
-				JOptionPane.showMessageDialog(jFrame,
-						"Administrador: ");
+				Login v1 = new Login(connection);
+				v1.setLocationRelativeTo(null);
+				v1.setVisible(true);
+				dispose();
 			}
 		});
 		btn_back.setIcon(new ImageIcon(AdminMenu.class.getResource("/assets/back.png")));

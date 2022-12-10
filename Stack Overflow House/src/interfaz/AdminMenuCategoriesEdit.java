@@ -1,6 +1,5 @@
 package interfaz;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -27,6 +26,7 @@ import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class AdminMenuCategoriesEdit extends JFrame {
 
 	private JPanel contentPane;
@@ -110,7 +110,14 @@ public class AdminMenuCategoriesEdit extends JFrame {
 				String category_name = (String) comboBox_category.getSelectedItem();
 				String name = textField_name.getText();
 				try {
-					editCategory(rut, connection,category_name, name);
+					boolean exist = selectNames(connection,name);
+					if (exist) {
+						JFrame jFrame = new JFrame();
+						jFrame.setAlwaysOnTop(true);
+						JOptionPane.showMessageDialog(jFrame,"Este nombre de categoría ya existe");
+					}else {
+						editCategory(rut, connection,category_name, name);
+					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -192,5 +199,19 @@ public class AdminMenuCategoriesEdit extends JFrame {
 		v4.setVisible(true);
 		dispose();
 
+	}
+	
+	public boolean selectNames(SQL_Manager connection, String newName) throws SQLException {
+		boolean exist = false;
+		String sql = "select name from category";
+		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		ResultSet rs = st.executeQuery();
+		while (rs.next()) {
+			if (rs.getString("name").equals(newName)) {
+				exist = true;
+			}
+		}
+		return exist;
 	}
 }

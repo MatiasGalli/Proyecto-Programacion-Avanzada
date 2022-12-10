@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class AdminMenuUsersEdit extends JFrame {
 
 	private JPanel contentPane;
@@ -167,6 +168,11 @@ public class AdminMenuUsersEdit extends JFrame {
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+				
+				AdminMenu v4 = new AdminMenu(rut, connection);
+				v4.setLocationRelativeTo(null);
+				v4.setVisible(true);
+				dispose();
 			}
 		});
 		btn_edit.setFont(new Font("Tahoma", Font.PLAIN, 23));
@@ -250,6 +256,8 @@ public class AdminMenuUsersEdit extends JFrame {
 		JFrame jFrame = new JFrame();
 		jFrame.setAlwaysOnTop(true);
 		JOptionPane.showMessageDialog(jFrame,"Usuario actualizado.");
+		
+		
 
 	}
 }

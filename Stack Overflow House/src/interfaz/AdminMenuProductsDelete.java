@@ -96,7 +96,7 @@ public class AdminMenuProductsDelete extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int row = table_products.getSelectedRow();
 				if (row != -1) {
-					int id = (int) table_products.getValueAt(row, 0);
+					int id =  Integer.parseInt((String)table_products.getValueAt(row, 0));
 					try {
 						deleteProduct(connection,id);
 					} catch (SQLException e1) {
@@ -141,11 +141,11 @@ public class AdminMenuProductsDelete extends JFrame {
 				table.setShowVerticalLines(false);
 				table.setFont(new Font("Tahoma", Font.PLAIN, 16));
 				table.setBorder(null);
-				String sql, category;
+				String sql;
 				PreparedStatement st;
 				ResultSet rs;
 				//EDITAR CONSULTA (INNER JOIN)
-				sql = "Select * from product order by id asc";
+				sql = "Select p.id, p.name, p.price, p.stock, c.name as category_name from product p inner join category c on c.id = p.category_id order by p.id asc";
 				st = connection.getConnection().prepareStatement(sql);
 				rs = st.executeQuery();
 				String titles[]={"ID", "Nombre del producto","Precio", "Stock", "Categoría"};
@@ -163,8 +163,7 @@ public class AdminMenuProductsDelete extends JFrame {
 					row[1]=rs.getString("name");
 					row[2]= "$ " + rs.getString("price");
 					row[3]=rs.getString("stock");
-					category = getCategories(connection,rs.getInt("category_id"));
-					row[4]= category;
+					row[4]= rs.getString("category_name");
 					model.addRow(row);
 					
 				}
@@ -187,21 +186,19 @@ public class AdminMenuProductsDelete extends JFrame {
 			return null;
 		}
 		
-		public String getCategories(SQL_Manager connection, int id) throws SQLException {
-
-			String sql = "select name from category where id = ?";
-			PreparedStatement st;
+		public void deleteProduct(SQL_Manager connection, int id) throws SQLException {
+			String sql = "delete from commentary where product_id = ?";
+			PreparedStatement st = connection.getConnection().prepareStatement(sql);
+			st.setInt(1, id);
+			st.executeUpdate();
+			
+			sql = "delete from product_cart where product_id = ?";
 			st = connection.getConnection().prepareStatement(sql);
 			st.setInt(1, id);
-			ResultSet rs = st.executeQuery();
-			rs.next();
-			String name = rs.getString(1);
-			return name;
-		}
-		
-		public void deleteProduct(SQL_Manager connection, int id) throws SQLException {
-			String sql = "delete from product where id = ?";
-			PreparedStatement st = connection.getConnection().prepareStatement(sql);
+			st.executeUpdate();
+			
+			sql = "delete from product where id = ?";
+			st = connection.getConnection().prepareStatement(sql);
 			st.setInt(1, id);
 			st.executeUpdate();
 			JFrame jFrame = new JFrame();

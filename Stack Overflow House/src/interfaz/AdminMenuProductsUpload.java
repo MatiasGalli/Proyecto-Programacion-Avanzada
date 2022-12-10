@@ -169,9 +169,7 @@ public class AdminMenuProductsUpload extends JFrame {
 							JOptionPane.showMessageDialog(jFrame,
 									"El espacio de precio tiene caracteres inv\u00E1lidos. Coloque s\u00F3lo cifras num\u00E9ricas.");
 						} else {
-							JFrame jFrame = new JFrame();
-							jFrame.setAlwaysOnTop(true);
-							JOptionPane.showMessageDialog(jFrame, "¡Producto creado exitosamente!");
+							
 
 							String name = textField_name.getText();
 							String description = textField_description.getText();
@@ -187,26 +185,29 @@ public class AdminMenuProductsUpload extends JFrame {
 								if (rs.next()) {
 									categoryID = rs.getInt(1);
 								}
+								boolean exist = selectNames(connection,name);
+								if (exist) {
+									JFrame jFrame = new JFrame();
+									jFrame.setAlwaysOnTop(true);
+									JOptionPane.showMessageDialog(jFrame, "Este nombre de producto ya existe");
+								}else {
+									int id = 0;
+									id = countProductsID(connection);
+									insertProduct(connection, (id + 1), name, description,price, stock, categoryID);
+									JFrame jFrame = new JFrame();
+									jFrame.setAlwaysOnTop(true);
+									JOptionPane.showMessageDialog(jFrame, "¡Producto creado exitosamente!");
+
+									AdminMenu v4 = new AdminMenu(rut, connection);
+									v4.setLocationRelativeTo(null);
+									v4.setVisible(true);
+									dispose();
+								}
+								
 								
 							} catch (SQLException e1) {
 								categoryID = 0;
 							}
-
-							int id = 0;
-							try {
-								id = countProductsID(connection);
-							} catch (SQLException e2) {
-								e2.printStackTrace();
-							}
-							try {
-								insertProduct(connection, (id + 1), name, description,price, stock, categoryID);
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-							AdminMenu v4 = new AdminMenu(rut, connection);
-							v4.setLocationRelativeTo(null);
-							v4.setVisible(true);
-							dispose();
 						}
 					}
 				} else {
@@ -317,5 +318,19 @@ public class AdminMenuProductsUpload extends JFrame {
 			cant++;
 		}
 		return values;
+	}
+	
+	public boolean selectNames(SQL_Manager connection, String newName) throws SQLException {
+		boolean exist = false;
+		String sql = "select name from product";
+		// FUNCIONALIDAD VERIFICAR EN CASO DE NO EXISTIR NINGÚN PRODUCTO
+		PreparedStatement st = connection.getConnection().prepareStatement(sql);
+		ResultSet rs = st.executeQuery();
+		while (rs.next()) {
+			if (rs.getString("name").equals(newName)) {
+				exist = true;
+			}
+		}
+		return exist;
 	}
 }

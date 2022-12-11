@@ -119,6 +119,7 @@ public class AdminMenuCategoriesUpload extends JFrame {
 				dispose();
 			}
 		});
+		btn_back.setIcon(new ImageIcon(AdminMenuCategoriesEdit.class.getResource("/assets/back.png")));
 		btn_back.setBorder(null);
 		btn_back.setBackground((Color) null);
 		btn_back.setBounds(10, 10, 30, 30);

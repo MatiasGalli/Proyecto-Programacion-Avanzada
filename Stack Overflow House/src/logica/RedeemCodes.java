@@ -11,12 +11,30 @@ public class RedeemCodes {
 	
 	public void addCode(SQL_Manager  connection, String code, int saldo) throws SQLException {
 		
-		String sql = "insert into redeemCodes(code,dinero) values(?,?)";
-		PreparedStatement st = connection.getConnection().prepareStatement(sql);
-		st.setString(1, code);
-		st.setInt(2, saldo);
-
-		st.executeUpdate();				
+		try {
+			Statement st = connection.getConnection().createStatement();
+			ResultSet rs = st.executeQuery("select * from redeemCodes where code = ?");
+			if (rs.next()) {
+				JFrame jFrame = new JFrame();
+				jFrame.setAlwaysOnTop(true);
+				JOptionPane.showMessageDialog(jFrame, "Ese c\u00F3digo ya existe y a\u00FAn no ha sido cobrado.");
+			} else {
+				PreparedStatement st2 = connection.getConnection().prepareStatement("insert into redeemCodes(code,dinero) values(?,?)");
+				st2.setString(1, code);
+				st2.setInt(2, saldo);
+				st2.executeUpdate();
+				JFrame jFrame = new JFrame();
+				jFrame.setAlwaysOnTop(true);
+				JOptionPane.showMessageDialog(jFrame, "c\u00F3digo de retribuci\u00F3n monetaria virtual creado exitosamente!");
+			}
+			
+		} catch (SQLException ex) {
+			JFrame jFrame = new JFrame();
+			jFrame.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(jFrame, "Hubo un error inesperado. Contactar Stack Overflow House");
+			System.out.println("ERROR EN ELIMINACI\u00D3N DE CODIGO. DETALLES: " + ex.getMessage());
+		}
+					
 	}
 	
 	public void deleteCode(SQL_Manager  connection, String code) throws SQLException {

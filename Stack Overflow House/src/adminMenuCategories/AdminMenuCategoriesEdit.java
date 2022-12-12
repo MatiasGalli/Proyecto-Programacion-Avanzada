@@ -118,7 +118,7 @@ public class AdminMenuCategoriesEdit extends JFrame {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Debes ingresar un nombre para editar");
-				} else if (exist) {
+				} else if (exist && !name.equals(category_name)) {
 					JFrame jFrame = new JFrame();
 					jFrame.setAlwaysOnTop(true);
 					JOptionPane.showMessageDialog(jFrame, "Este nombre de categoría ya existe");

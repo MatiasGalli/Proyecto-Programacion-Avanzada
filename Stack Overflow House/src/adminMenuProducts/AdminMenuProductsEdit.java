@@ -236,7 +236,7 @@ public class AdminMenuProductsEdit extends JFrame {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame,"Dato invalido en Stock. Stock mínimo: 0");
-					}else if (exist) {
+					}else if (exist && !name.equals(product_name)) {
 						JFrame jFrame = new JFrame();
 						jFrame.setAlwaysOnTop(true);
 						JOptionPane.showMessageDialog(jFrame, "Este nombre de producto ya existe");

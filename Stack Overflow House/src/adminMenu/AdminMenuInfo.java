@@ -123,7 +123,7 @@ public class AdminMenuInfo extends JFrame {
 		contentPane.add(lbl_name);
 		
 		String fullname = "";
-		fullname = userImpl.selectUserFullname(connection, rut);
+		fullname = userImpl.selectUserFullname(connection, user_name);
 		textField_fullname = new JTextField();
 		textField_fullname.setText(fullname);
 		textField_fullname.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -138,7 +138,7 @@ public class AdminMenuInfo extends JFrame {
 		
 		
 		String email = "";
-		email = userImpl.selectUserEmail(connection, rut);
+		email = userImpl.selectUserEmail(connection, user_name);
 		textField_email = new JTextField();
 		textField_email.setText(email);
 		textField_email.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -152,7 +152,7 @@ public class AdminMenuInfo extends JFrame {
 		contentPane.add(lbl_address);
 		
 		String address = "";
-		address = userImpl.selectUserAddress(connection, rut);
+		address = userImpl.selectUserAddress(connection, user_name);
 		textField_address = new JTextField();
 		textField_address.setText(address);
 		textField_address.setFont(new Font("Tahoma", Font.PLAIN, 16));
